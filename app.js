@@ -5,11 +5,15 @@ const fs = require('fs');
 
 const nodeHtmlToImage = require('node-html-to-image')
 const cloudinary = require("./utils/cloudinary");
+const router = require("express").Router();
+
+const userRoute = require("./routes/userRoute");
 
 app.use(express.static("./public"));
 app.use("/images", express.static('images'));
 app.set("view engine","ejs");
 app.set("views","./views");
+app.use(express.json())
 
 
 const blueResume = require("./docs/blue-resume");
@@ -18,13 +22,19 @@ require('dotenv').config();
 
 //ket noi mongoose
 const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGO_URI,(e)=>{
-    if(e){
-        console.log("ket noi khong thanh cong"+e);
-    }else{
-        console.log("ket noi thanh cong")
-    }
+mongoose.connect(process.env.MONGO_URI,{
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    },(e)=>{
+        if(e){
+            console.log("ket noi khong thanh cong"+e);
+        }else{
+            console.log("ket noi thanh cong")
+        }
 });
+
+//ROUTER
+app.use("/laihieu/user",userRoute);
 
 app.get('/',(req,res)=>{
     res.render("trangchu")
