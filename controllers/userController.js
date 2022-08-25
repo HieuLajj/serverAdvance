@@ -71,6 +71,7 @@ const userController = {
         res.json({success: true,user:userInfo, token})
     },
 
+    //UPDATE IMAGE PROFILE
     uploadProfile : async (req,res)=>{
         const {user} = req;
         if(!user) return res
@@ -95,6 +96,89 @@ const userController = {
             message: 'Server error,try after some time'
         })
             console.log('Eroor while uploading profile imge',error.message)
+        }
+    },
+    
+    //SIGN IN 2 BY TOKEN
+    userSignIn2: async (req,res) =>{
+        console.log("siginIn2")
+        const {token} = req?.params;
+        if(!req.user){
+            return res.json({success: false, message: 'phien da het han!'});}
+            const userInfo = {
+                id: req.user.id,
+                name: req.user.name,
+                email: req.user.email,
+                phone: req.user.phone,
+                avg: req.user.avg,
+                // password: user.password,
+                avatar: req.user.avatar ? req.user.avatar : '',
+            }
+            res.json({success: true,user:userInfo,token})
+    },
+    //SIGN OUT
+    userSignOut: async (req,res) =>{
+        if (req.headers && req.headers.authorization) {
+            const token = req.headers.authorization.split(' ')[1];
+            if (!token) {
+                return res
+                    .status(401)
+                    .json({ success: false, message: 'Authorization fail!' });
+            }      
+            tokens = req.user.tokens;
+            const newTokens = tokens.filter(t => t.token !== token);
+      
+            await User.findByIdAndUpdate(req.user._id, { tokens: newTokens });
+            res.json({ success: true, message: 'Sign out successfully!' });
+        }
+    },
+    //UPLOAD PROFILE
+    uploadProfileInformation: async (req,res) => {
+        const {id} = req?.params;
+        if(req.body.password!=null){
+            
+            bcrypt.hash(req.body.password, 8, async (err, hash) => {
+                if (err) return next(err);
+                req.body.password = hash;
+                const { name, email, phone, password, avg } = req.body;
+                console.log(password)
+                try {
+                    console.log("------------------------")
+                    const exp = await User.findByIdAndUpdate(
+                    id,
+                    {
+                        name,
+                        email,
+                        phone,
+                        password,
+                        avg
+                    },
+                    { new: true, runValidators: true }
+                    )
+                    res.json({success: true, exp});
+                } catch (error) {
+                    res.json(error)
+                }
+            })
+        }else{
+            const { name, email, phone, password,age,sex } = req.body;
+            try {
+                const exp = await User.findByIdAndUpdate(
+                    id,
+                    {
+                        name,
+                        email,
+                        phone,
+                        password,
+                        age,
+                        sex,
+                    },
+                    { new: true, runValidators: true }
+                )
+                res.json({success: true, exp});
+            } catch (error) {
+                res.json(error)
+            }
         }
     }, 
 }
