@@ -8,6 +8,7 @@ const cloudinary = require("./utils/cloudinary");
 const router = require("express").Router();
 
 const userRoute = require("./routes/userRoute");
+const resumeRoute = require("./routes/resumeRoute");
 
 app.use(express.static("./public"));
 app.use("/images", express.static('images'));
@@ -35,20 +36,21 @@ mongoose.connect(process.env.MONGO_URI,{
 
 //ROUTER
 app.use("/laihieu/user",userRoute);
+app.use("/laihieu/resume",resumeRoute);
 
 app.get('/',(req,res)=>{
     res.render("trangchu")
 })
 app.get('/preViewResume',async(req,res)=>{  
-    // try {
-    //     console.log("ok");
-    //     const result = await cloudinary.uploader.upload("./images/image.png");
-    //     res.json(result);
-    //     console.log("xong");       
-    // } catch (error) {
-    //     console.log("loi")
-    //     console.log(error)
-    // }
+    try {
+        console.log("ok");
+        const result = await cloudinary.uploader.upload("./images/image.png");
+        res.json(result);
+        console.log("xong");       
+    } catch (error) {
+        console.log("loi")
+        console.log(error)
+    }
 
 
     // let pathImage = `./images/image${Date.now()}toHieulajj.png`;
@@ -67,8 +69,8 @@ app.get('/preViewResume',async(req,res)=>{
     let pathImageChange = `./images/image${Date.now()}toHieulajj1.png`
     nodeHtmlToImage({
         output: pathImage,
-         html: blueResume(),
-         content: { name: 'you' }
+        html: blueResume(),
+        content: { name: 'you' }
     }).then(() => 
         {
             console.log("thanh cong buoc 1");
