@@ -42,14 +42,20 @@ const resumeController = {
         const {user} = req;
 
         let anh = await Resume.findById(id);
+        if(anh.anhbieumau!=null){
+            fs.unlink(`.${anh.anhbieumau.slice(20)}`, (err) => {
+                if (err) {
+                console.error(err)
+                return
+            }else{
+            }
+            }) 
+        }
         if(!user) return res
             .status(401)
             .json({success:false, message: 'unauthorized acesss'
                 })
-        try {
-            
-
-
+        try {  
             const {ten,chieucao,cannang,kinhnghiem,hocvan,email,
             sohokhau,socccd,sothich,tinhcach,quequan,trinhdovanhoa,
             nguyenvong,nganhnghe,dieukiendacbiet,mucluong,vung,tinh,
@@ -86,7 +92,7 @@ const resumeController = {
                     mau,
                     linhvucchuyenmon,
                     chungchi,
-                    anhbieumau: Xulyanhresume(userInfo = req.body, userImage=anh.anhdaidien),
+                    anhbieumau: Xulyanhresume(anh, userInfo = req.body, userImage=anh.anhdaidien),
                     phanloaibieumau
                 },
                 { new: true, runValidators: true }
@@ -101,12 +107,28 @@ const resumeController = {
         }
     }
 }
-function Xulyanhresume(userInfo,userImage){  
+function Xulyanhresume(anh,userInfo,userImage){ 
+    let bangmau =[]; 
+    let trunggian = (userInfo.mau)?userInfo.mau:anh.mau
+    switch(trunggian){
+        case "1_red":
+            bangmau = ["rgb(252, 76, 0)","rgb(255, 196, 0)","rgb(119, 26, 0)","rgb(119, 26, 0)"]
+            break
+        case "1_blue":
+            bangmau = ["rgb(183, 182, 255)","rgb(91, 88, 255)","rgb(12, 36, 58)","rgb(1, 0, 66)"]
+            break
+        case "1_green":
+            bangmau = ["rgb(139, 247, 205)","rgb(183, 217, 255)","rgb(0, 119, 89)","rgb(0, 119, 89)"]
+            break
+        case "1_yellow":
+            bangmau = ["rgb(200, 255, 2)","rgb(247, 251, 5)","rgb(255, 162, 2)","rgb(255, 162, 2)"]
+            break   
+    }
     let pathImage = `./images/image${Date.now()}toHieulajj.png`;
     let pathImageChange = `./images/image${Date.now()}toHieulajj1.png`
     nodeHtmlToImage({
         output: pathImage,
-        html: blueResume(userInfo,userImage),
+        html: blueResume(anh, userInfo, userImage, bangmau),
         content: { name: 'you' }
     }).then(() => 
         {

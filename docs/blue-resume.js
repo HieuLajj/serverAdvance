@@ -22,7 +22,7 @@ function duyenmangthanhbang(g){
     }
     return b;
 }
-const blueResume =(userInfo,userImage)=>{
+const blueResume =(anh,userInfo,userImage,bangmau)=>{
    
     return `
     <!doctype html>
@@ -43,23 +43,23 @@ const blueResume =(userInfo,userImage)=>{
             }
     
             .box {
-                background-color: rgb(183, 182, 255);
+                background-color: ${bangmau[0]};
                 width: 100%;
                 height: 100%;
             }
     
             .left-side {
-                color: rgb(91, 88, 255);
+                color:  ${bangmau[1]};
                 width: 33%;
                 height: 100%;
-                background-color: rgb(12, 36, 58);
+                background-color:  ${bangmau[2]};
     
             }
     
             .right-side {
                 height: 100%;
                 width: 65%;
-                color: rgb(1, 0, 66);
+                color:  ${bangmau[3]};
             }
     
             .name {
@@ -105,30 +105,30 @@ const blueResume =(userInfo,userImage)=>{
                     <div class="contact ml-2 mt-2">
                         <div class="heading-text text-uppercase">Thông tin cá nhân</div>
                         <p class="para mb-1">
-                            Quê quán: ${userInfo.quequan}<br>
-                            Địa chỉ hiện tại: ${userInfo.diachihientai}<br>
-                            Điện thoại: ${userInfo.dienthoai}<br>
-                            Email: ${userInfo.email}<br>
-                            Ngày sinh: ${userInfo.ngaysinh}<br>
-                            Chiều cao: ${userInfo.chieucao}<br>
-                            Cân nặng: ${userInfo.cannang}<br>
-                            Số hộ khẩu: ${userInfo.sohokhau}<br>
-                            Số CMND/CCCD: ${userInfo.socccd}<br>
-                            Tính cách: ${userInfo.tinhcach}<br>
-                            Trình độ văn hóa: ${userInfo.quequan}<br>
+                            Quê quán: ${userInfo.quequan? userInfo.quequan: anh.quequan}<br>
+                            Địa chỉ hiện tại: ${userInfo.diachihientai? userInfo.diachihientai: anh.diachihientai}<br>
+                            Điện thoại: ${userInfo.dienthoai? userInfo.dienthoai: anh.dienthoai}<br>
+                            Email: ${userInfo.email? userInfo.email: anh.email}<br>
+                            Ngày sinh: ${userInfo.ngaysinh? userInfo.ngaysinh: anh.ngaysinh}<br>
+                            Chiều cao: ${userInfo.chieucao? userInfo.chieucao: anh.chieucao}<br>
+                            Cân nặng: ${userInfo.cannang? userInfo.cannang: anh.cannang}<br>
+                            Số hộ khẩu: ${userInfo.sohokhau? userInfo.sohokhau: anh.sohokhau}<br>
+                            Số CMND/CCCD: ${userInfo.socccd? userInfo.socccd: anh.socccd}<br>
+                            Tính cách: ${userInfo.tinhcach? userInfo.tinhcach: anh.tinhcach}<br>
+                            Trình độ văn hóa: ${userInfo.trinhdovanhoa? userInfo.trinhdovanhoa: anh.trinhdovanhoa}<br>
                         </p>
                     </div>
                     <div class="expert ml-2 mt-2">
                         <div class="heading-text text-uppercase">Lĩnh vực chuyên môn</div>
                         <p class="para mb-1">
-                           ${duyetmang(userInfo.linhvucchuyenmon)}
+                           ${duyetmang(userInfo.linhvucchuyenmon? userInfo.linhvucchuyenmon: anh.linhvucchuyenmon)}
                         </p>
                     </div>
     
                     <div class="skill ml-2 mt-2">
                         <div class="heading-text text-uppercase">Kỹ năng</div>
                         <p class="para mb-1">
-                           ${duyetmang(userInfo.kynang)}
+                           ${duyetmang(userInfo.kynang? userInfo.kynang: anh.kynang)}
                         </p>
                     </div>
     
@@ -136,24 +136,24 @@ const blueResume =(userInfo,userImage)=>{
                     <div class="hobbies ml-2 mt-2">
                         <div class="heading-text text-uppercase">Sở thích</div>
                         <p class="para mb-1">
-                           ${duyetmang(userInfo.sothich)}
+                           ${duyetmang(userInfo.sothich? userInfo.sothich: anh.sothich)}
                         </p>
                     </div>
                 </div>
                 <div class="right-side d-inline-block m-0 p-0 align-top">
-                    <h2 class="name text-uppercase ml-3 my-2">${userInfo.ten}</h2>
+                    <h2 class="name text-uppercase ml-3 my-2">${userInfo.ten? userInfo.ten: anh.ten}</h2>
     
                     <div class="contact ml-3 mt-3">
                         <div class="heading-text text-uppercase">Giới thiệu về bản thân và nguyện vọng</div>
                         <p class="para mb-1">
-                            ${userInfo.nguyenvong}
+                            ${userInfo.nguyenvong? userInfo.nguyenvong: anh.nguyenvong}
                         </p>
                     </div>
                     <div class="personal ml-3 mt-3">
                         <div class="heading-text text-uppercase">Kinh nghiệm</div>
                         <table class="per-info">
                             <tbody>
-                               ${duyenmangthanhbang(userInfo.kinhnghiem)}
+                               ${duyenmangthanhbang(userInfo.kinhnghiem? userInfo.kinhnghiem: anh.kinhnghiem)}
                             </tbody>
     
                         </table>
@@ -162,29 +162,27 @@ const blueResume =(userInfo,userImage)=>{
                         <div class="heading-text text-uppercase">Học vấn</div>
                         <table class="per-info">
                             <tbody>
-                             ${duyenmangthanhbang(userInfo.hocvan)}
+                             ${duyenmangthanhbang(userInfo.hocvan? userInfo.hocvan: anh.hocvan)}
                             </tbody>
                         </table>
-                    </div>
-    
-    
+                    </div>   
     
                     <div class="key-skills ml-3 mt-3">
                         <div class="heading-text text-uppercase">Chứng chỉ</div>
                         <ul class="pl-1">
-                            ${duyetmang2(userInfo.chungchi)}
+                            ${duyetmang2(userInfo.chungchi? userInfo.chungchi: anh.chungchi)}
                         </ul>
                     </div>
                     <div class="key-skills ml-3 mt-3">
                         <div class="heading-text text-uppercase">Điều kiện đặc biệt</div>
                         <ul class="pl-1">
-                            <li>${userInfo.dieukiendacbiet}</li>
+                            <li>${userInfo.dieukiendacbiet? userInfo.dieukiendacbiet: anh.dieukiendacbiet}</li>
                         </ul>
                     </div>
                     <div class="key-skills ml-3 mt-3">
                         <div class="heading-text text-uppercase">Mức lương</div>
                         <ul class="pl-1">
-                            <li>${userInfo.mucluong}</li>
+                            <li>${userInfo.mucluong? userInfo.mucluong: anh.mucluong}</li>
                         </ul>
                     </div>
                 </div>
