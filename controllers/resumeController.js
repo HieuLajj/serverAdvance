@@ -50,10 +50,11 @@ const resumeController = {
             
 
 
-            const {ten,chieucao,cannang,kinhnghiem,hocvan,
+            const {ten,chieucao,cannang,kinhnghiem,hocvan,email,
             sohokhau,socccd,sothich,tinhcach,quequan,trinhdovanhoa,
             nguyenvong,nganhnghe,dieukiendacbiet,mucluong,vung,tinh,
-            diachihientai,anhchungchi,mau,phanloaibieumau
+            diachihientai,anhchungchi,mau,phanloaibieumau,dienthoai,
+            ngaysinh,tuoi,linhvucchuyenmon,kynang,chungchi
             } = req.body
             const result = await Resume.findByIdAndUpdate(
                 id,
@@ -76,16 +77,20 @@ const resumeController = {
                     vung,
                     tinh,
                     diachihientai,
+                    dienthoai,
                     anhchungchi,
+                    email,
+                    ngaysinh,
+                    tuoi,
+                    kynang,
                     mau,
+                    linhvucchuyenmon,
+                    chungchi,
                     anhbieumau: Xulyanhresume(userInfo = req.body, userImage=anh.anhdaidien),
                     phanloaibieumau
                 },
                 { new: true, runValidators: true }
-
             )
-            console.log(anh.anhdaidien);
-            console.log("bbbbbbbbbbbb")
             res.json({success: true,user:result})
         } catch (error) {
             console.log(error)

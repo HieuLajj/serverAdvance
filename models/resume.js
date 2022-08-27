@@ -16,11 +16,32 @@ const resumeSchema = new mongoose.Schema({
     cannang:{
         type: Number,
     },
-    kinhnghiem:{
+    dienthoai:{
+        type: String,
+    },
+    email:{
+        type: String,
+    },
+    ngaysinh:{
+        type: String,
+    },
+    tuoi:{
+        type: Number,
+    },
+    linhvucchuyenmon:{
         type: Array,
     },
-    hocvan:{
+    chungchi:{
+        type:Array,
+    },
+    kynang:{
         type: Array,
+    },
+    kinhnghiem:{
+        type: Object,
+    },
+    hocvan:{
+        type: Object,
     },
     sohokhau:{
         type: String,
@@ -29,7 +50,7 @@ const resumeSchema = new mongoose.Schema({
         type: String,
     },
     sothich:{
-        type: String,
+        type: Array,
     },
     tinhcach:{
         type: String,

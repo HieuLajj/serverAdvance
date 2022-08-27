@@ -1,4 +1,29 @@
+function duyetmang(g){
+    let b=""
+    g.forEach(element => {
+        b+= `${element}<br>`
+    })
+    return b;
+}
+function duyetmang2(g){
+    let b=""
+    g.forEach(element => {
+        b+= `<li>${element}</li>`
+    })
+    return b;
+}
+function duyenmangthanhbang(g){
+    let b=""
+    for (key in g){
+        b+= `<tr class="border">
+                <td>${key}</td>
+                <td>${g[key]}</td>
+            </tr>`
+    }
+    return b;
+}
 const blueResume =(userInfo,userImage)=>{
+   
     return `
     <!doctype html>
 <html lang="en">
@@ -81,42 +106,29 @@ const blueResume =(userInfo,userImage)=>{
                         <div class="heading-text text-uppercase">Thông tin cá nhân</div>
                         <p class="para mb-1">
                             Quê quán: ${userInfo.quequan}<br>
-                            Địa chỉ hiện tại<br>
-                            <!-- Hà Nội<br> -->
-                            Điện thoại<br>
-                            Email<br>
-                            Ngày sinh<br>
-                            Chiều cao<br>
-                            Cân nặng<br>
-                            <!-- Tên trường THPT<br>
-                            Số hộ khẩu<br> -->
-                            Số CMND/CCCD<br>
-                            Tính cách<br>
-                            Trình độ văn hóa<br>
-                            <!-- House no: 72-2 Jigatola, Dhaka <br>
-                            +88017293723762434 <br>
-                            +88015283727345643 <br>
-                            example@gmail.com <br>
-                            www.website-domain.com -->
+                            Địa chỉ hiện tại: ${userInfo.diachihientai}<br>
+                            Điện thoại: ${userInfo.dienthoai}<br>
+                            Email: ${userInfo.email}<br>
+                            Ngày sinh: ${userInfo.ngaysinh}<br>
+                            Chiều cao: ${userInfo.chieucao}<br>
+                            Cân nặng: ${userInfo.cannang}<br>
+                            Số hộ khẩu: ${userInfo.sohokhau}<br>
+                            Số CMND/CCCD: ${userInfo.socccd}<br>
+                            Tính cách: ${userInfo.tinhcach}<br>
+                            Trình độ văn hóa: ${userInfo.quequan}<br>
                         </p>
                     </div>
                     <div class="expert ml-2 mt-2">
                         <div class="heading-text text-uppercase">Lĩnh vực chuyên môn</div>
                         <p class="para mb-1">
-                            Web development <br>
-                            Financial Analysis <br>
-                            Video Editing <br>
-                            Digital marketing<br>
+                           ${duyetmang(userInfo.linhvucchuyenmon)}
                         </p>
                     </div>
     
                     <div class="skill ml-2 mt-2">
                         <div class="heading-text text-uppercase">Kỹ năng</div>
                         <p class="para mb-1">
-                            MC Office, Libre Office, Google<br>
-                            Docs, EViews, Digital Marketing, <br>
-                            Video Editing, Linux, Windows, <br>
-                            Web Developer (Freelancer)<br>
+                           ${duyetmang(userInfo.kynang)}
                         </p>
                     </div>
     
@@ -124,45 +136,24 @@ const blueResume =(userInfo,userImage)=>{
                     <div class="hobbies ml-2 mt-2">
                         <div class="heading-text text-uppercase">Sở thích</div>
                         <p class="para mb-1">
-                            Bóng đá<br>
-                            Bóng bàn <br>
-                            Du lịch<br>
-                            Xem phim<br>
+                           ${duyetmang(userInfo.sothich)}
                         </p>
                     </div>
                 </div>
                 <div class="right-side d-inline-block m-0 p-0 align-top">
-                    <h2 class="name text-uppercase ml-3 my-2">Md. naruto</h2>
+                    <h2 class="name text-uppercase ml-3 my-2">${userInfo.ten}</h2>
     
                     <div class="contact ml-3 mt-3">
-                        <div class="heading-text text-uppercase">Giới thiệu về bản thân</div>
+                        <div class="heading-text text-uppercase">Giới thiệu về bản thân và nguyện vọng</div>
                         <p class="para mb-1">
-                            Multi-telented with knowledge of accounting & financial analysis, digital merketing,
-                            web development and others consistently rewarded for success in planning and operational
-                            improvements. Expert in IT and good in delivering effective and engaging presentations to
-                            variety of audiences
+                            ${userInfo.nguyenvong}
                         </p>
                     </div>
                     <div class="personal ml-3 mt-3">
                         <div class="heading-text text-uppercase">Kinh nghiệm</div>
                         <table class="per-info">
                             <tbody>
-                                <tr class="border">
-                                    <td>Father's Name</td>
-                                    <td>Shahab Udding</td>
-                                </tr>
-                                <tr class="border">
-                                    <td>Mather's Name</td>
-                                    <td>Sahida Akhter</td>
-                                </tr>
-                                <tr class="border">
-                                    <td>Date of Birth</td>
-                                    <td>12 feb 1997</td>
-                                </tr>
-                                <tr class="border">
-                                    <td>Permanent Address</td>
-                                    <td>Shohorbari, Singra, Natore</td>
-                                </tr>
+                               ${duyenmangthanhbang(userInfo.kinhnghiem)}
                             </tbody>
     
                         </table>
@@ -171,33 +162,8 @@ const blueResume =(userInfo,userImage)=>{
                         <div class="heading-text text-uppercase">Học vấn</div>
                         <table class="per-info">
                             <tbody>
-                                <tr class="border">
-                                    <td>2016-2019</td>
-                                    <td>
-                                        bachelor of Business Administration <br>
-                                        CGPA 3.03 <br>
-                                        Major in FInance <br>
-                                        Daffodil international University
-                                    </td>
-                                </tr>
-                                <tr class="border">
-                                    <td>2013-2015</td>
-                                    <td>
-                                        HSC <br>
-                                        CGPA 3.33 <br>
-                                        Business Studies <br>
-                                        Singra Damdama Pilot School and Collage
-                                    </td>
-                                </tr>
-                                <tr class="border">
-                                    <td>2008-2013</td>
-                                    <td>
-                                        SSC <br>
-                                        CGPA 3.63 <br>
-                                    </td>
-                                </tr>
+                             ${duyenmangthanhbang(userInfo.hocvan)}
                             </tbody>
-    
                         </table>
                     </div>
     
@@ -206,20 +172,19 @@ const blueResume =(userInfo,userImage)=>{
                     <div class="key-skills ml-3 mt-3">
                         <div class="heading-text text-uppercase">Chứng chỉ</div>
                         <ul class="pl-1">
-                            <li>Understanding accounting and financial principles</li>
-                            <li>Computer literate and highly proficient in MS excel</li>
+                            ${duyetmang2(userInfo.chungchi)}
                         </ul>
                     </div>
                     <div class="key-skills ml-3 mt-3">
                         <div class="heading-text text-uppercase">Điều kiện đặc biệt</div>
                         <ul class="pl-1">
-                            <li>Understanding accounting and financial principles</li>
+                            <li>${userInfo.dieukiendacbiet}</li>
                         </ul>
                     </div>
                     <div class="key-skills ml-3 mt-3">
                         <div class="heading-text text-uppercase">Mức lương</div>
                         <ul class="pl-1">
-                            <li>2000</li>
+                            <li>${userInfo.mucluong}</li>
                         </ul>
                     </div>
                 </div>
