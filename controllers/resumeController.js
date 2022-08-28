@@ -100,14 +100,61 @@ const resumeController = {
             res.json({success: true,user:result})
         } catch (error) {
             console.log(error)
-        res.status(500).json({
-            success: false,
-            message: error
-        })
+            res.status(500).json({
+                success: false,
+                message: error
+            })
         }
-    }
+    },
+    updateImage: async(req,res)=>{
+        const {id} = req?.params;
+        const {user} = req;
+        let anh = await Resume.findById(id);
+        if(anh.anhbieumau!=null){
+            fs.unlink(`.${anh.anhbieumau.slice(20)}`, (err) => {
+                if (err) {
+                console.error(err)
+                return
+            }else{
+            }
+            }) 
+        }
+        if(!user) return res
+            .status(401)
+            .json({success:false, message: 'unauthorized acesss'
+            })
+        try {
+            console.log("dangchay")
+            const result = await cloudinary.uploader.upload(req.file.path,{
+                public_id: `${user._id}_profile`,
+                width: 500,
+                height:500,
+                crop: 'fill'
+              });
+            let a = result.url
+            //console.log(a)
+            const result2 = await Resume.findByIdAndUpdate(
+                id,
+                {  anhdaidien: result.url,
+                   anhbieumau: Xulyanhresume(anh, userInfo = anh, userImage=a),   
+            
+            })
+              res.status(201).json({
+                success: true,
+                result2,
+                message: 'Your Profile image has updateed'
+            })
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                success: false,
+                message: error
+            })
+        }
+    }    
 }
 function Xulyanhresume(anh,userInfo,userImage){ 
+    console.log("co chay")
     let bangmau =[]; 
     let trunggian = (userInfo.mau)?userInfo.mau:anh.mau
     switch(trunggian){

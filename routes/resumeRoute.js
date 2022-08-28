@@ -20,4 +20,5 @@ const uploads = multer({ storage, fileFilter });
 //ADD RESUME
 router.post('/add_resume1',isAuth, uploads.single('profile'),resumeController.addResume1);
 router.put('/add_resume2/:id',isAuth,resumeController.addResume2);
+router.put('/update_image/:id',isAuth,uploads.single('profile'),resumeController.updateImage);
 module.exports = router;

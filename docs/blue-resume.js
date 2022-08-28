@@ -23,7 +23,8 @@ function duyenmangthanhbang(g){
     return b;
 }
 const blueResume =(anh,userInfo,userImage,bangmau)=>{
-   
+   console.log(userImage);
+   console.log("=================")
     return `
     <!doctype html>
 <html lang="en">
