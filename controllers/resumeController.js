@@ -9,7 +9,9 @@ const fs = require('fs');
 //const cloudinary = require('../helper/imageUpload')
 //const blueResume = require("./docs/blue-resume");
 const blueResume = require("../docs/blue-resume");
-const nodeHtmlToImage = require('node-html-to-image')
+const mongoose = require("mongoose");
+const nodeHtmlToImage = require('node-html-to-image');
+const { userInfo } = require('os');
 const resumeController = {
     addResume1: async(req,res)=>{
         const {user} = req;
@@ -111,6 +113,7 @@ const resumeController = {
         const {user} = req;
         let anh = await Resume.findById(id);
         if(anh.anhbieumau!=null){
+            console.log(anh.anhbieumau)
             fs.unlink(`.${anh.anhbieumau.slice(20)}`, (err) => {
                 if (err) {
                 console.error(err)
@@ -131,18 +134,20 @@ const resumeController = {
                 height:500,
                 crop: 'fill'
               });
-            let a = result.url
-            //console.log(a)
+            let abc = result.url
+            console.log(abc)
+            console.log("----------------")
             const result2 = await Resume.findByIdAndUpdate(
                 id,
                 {  anhdaidien: result.url,
-                   anhbieumau: Xulyanhresume(anh, userInfo = anh, userImage=a),   
+                   anhbieumau: Xulyanhresume(anh, userInfo ,userImage = abc),   
             
-            })
+                },
+                { new: true, runValidators: true })
               res.status(201).json({
                 success: true,
                 result2,
-                message: 'Your Profile image has updateed'
+                message: 'Your Profile has updated'
             })
         } catch (error) {
             console.log(error)
@@ -151,10 +156,60 @@ const resumeController = {
                 message: error
             })
         }
-    }    
+    },  
+    deleteResume: async(req,res)=>{
+        const {id} = req?.params;
+        try {
+          const exp = await Resume.findByIdAndDelete(id);
+          res.json({success: true, exp});
+        } catch (error) {
+          res.json(error);
+        }
+    },
+    // fetch all resume
+    fetch_all: async (req,res) => {
+        try {
+          const exp = await Resume.find();
+          res.json(exp);
+        } catch (error) {
+          res.json(error);
+        }
+    },
+    //resumeByPhanloaibieumau
+    resumePhanloaibieumau: async (req,res) => {
+        console.log(req.user._id)
+        console.log("hello")
+        try {
+          const exp = await Resume.aggregate([              
+            {$match: { 
+              user: mongoose.Types.ObjectId(req.user._id)
+            }},
+            {$group:{
+                _id:"$phanloaibieumau",
+            }},                   
+          ])     
+          res.json(exp);
+        } catch (error) {
+          res.json(error);
+        }
+    },
+    //resumetheophanloai
+    resumeTypes: async (req,res) => {
+        const {id} = req?.params;
+        try {
+          const exp = await Resume.aggregate([              
+            {$match: { 
+              user: mongoose.Types.ObjectId(req.user._id),
+              phanloaibieumau: id
+            }},                  
+          ])     
+          res.json(exp);
+        } catch (error) {
+          res.json(error);
+        }
+    },     
 }
 function Xulyanhresume(anh,userInfo,userImage){ 
-    console.log("co chay")
     let bangmau =[]; 
     let trunggian = (userInfo.mau)?userInfo.mau:anh.mau
     switch(trunggian){
@@ -186,7 +241,6 @@ function Xulyanhresume(anh,userInfo,userImage){
                     console.error(err)
                     return
                 }else{
-                    console.log("xoa file cu thanh cong");
                 }
                 }) 
                } 

@@ -151,7 +151,8 @@ const userController = {
                         email,
                         phone,
                         password,
-                        avg
+                        age,
+                        sex,
                     },
                     { new: true, runValidators: true }
                     )
