@@ -11,7 +11,7 @@ const fs = require('fs');
 const blueResume = require("../docs/blue-resume");
 const mongoose = require("mongoose");
 const nodeHtmlToImage = require('node-html-to-image');
-const { userInfo } = require('os');
+//const { userInfo } = require('os');
 const resumeController = {
     addResume1: async(req,res)=>{
         const {user} = req;
@@ -42,6 +42,7 @@ const resumeController = {
     addResume2: async(req,res)=>{
         const {id} = req?.params;
         const {user} = req;
+        let userInfo;
 
         let anh = await Resume.findById(id);
         if(anh.anhbieumau!=null){
@@ -111,6 +112,7 @@ const resumeController = {
     updateImage: async(req,res)=>{
         const {id} = req?.params;
         const {user} = req;
+        let userInfo;
         let anh = await Resume.findById(id);
         if(anh.anhbieumau!=null){
             console.log(anh.anhbieumau)
@@ -140,8 +142,7 @@ const resumeController = {
             const result2 = await Resume.findByIdAndUpdate(
                 id,
                 {  anhdaidien: result.url,
-                   anhbieumau: Xulyanhresume(anh, userInfo ,userImage = abc),   
-            
+                   anhbieumau: Xulyanhresume(anh, userInfo ,userImage = abc),      
                 },
                 { new: true, runValidators: true })
               res.status(201).json({
@@ -211,7 +212,8 @@ const resumeController = {
 }
 function Xulyanhresume(anh,userInfo,userImage){ 
     let bangmau =[]; 
-    let trunggian = (userInfo.mau)?userInfo.mau:anh.mau
+    let trunggian = (userInfo?.mau)?userInfo?.mau:anh.mau
+    console.log(trunggian)
     switch(trunggian){
         case "1_red":
             bangmau = ["rgb(252, 76, 0)","rgb(255, 196, 0)","rgb(119, 26, 0)","rgb(119, 26, 0)"]
@@ -224,7 +226,10 @@ function Xulyanhresume(anh,userInfo,userImage){
             break
         case "1_yellow":
             bangmau = ["rgb(200, 255, 2)","rgb(247, 251, 5)","rgb(255, 162, 2)","rgb(255, 162, 2)"]
-            break   
+            break  
+        default:
+            bangmau = ["rgb(252, 76, 0)","rgb(255, 196, 0)","rgb(119, 26, 0)","rgb(119, 26, 0)"]
+            break 
     }
     let pathImage = `./images/image${Date.now()}toHieulajj.png`;
     let pathImageChange = `./images/image${Date.now()}toHieulajj1.png`
