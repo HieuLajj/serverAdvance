@@ -1,4 +1,6 @@
-<!doctype html>
+const defaultRecruit = (recruitUpdate, recruitInfo, bangmau)=>{
+    return`
+    <!doctype html>
 <html lang="en">
     <head>
         <!-- Required meta tags -->
@@ -71,17 +73,18 @@
         <div class="resume border shadow d-flex aligh-items-center jusify-content-center">
             <div class="box">
                 <div class="right-side d-inline-block m-0 p-0 align-top">
-                    <h2 class="name text-uppercase ml-3 my-2">Nha tuyen dung</h2>
-                    <h2 class="name text-uppercase ml-3 my-2">Dia chi lam viec</h2>
-                    <h2 class="name text-uppercase ml-3 my-2">Khu vuc</h2>
-                    <h2 class="name text-uppercase ml-3 my-2">Thong tin lien he</h2>
-                    <h2 class="name text-uppercase ml-3 my-2">Kinh nghiem</h2>
-                    <h2 class="name text-uppercase ml-3 my-2">Trinh do ngoai ngu</h2>
-                    <h2 class="name text-uppercase ml-3 my-2">Do tuoi</h2>
-                    <h2 class="name text-uppercase ml-3 my-2">Yeu cau khac</h2>
-                    <h2 class="name text-uppercase ml-3 my-2">Gioi tinh</h2>
-                    <h2 class="name text-uppercase ml-3 my-2">So luong tuyen</h2>
-                    <h2 class="name text-uppercase ml-3 my-2">Luong co ban</h2>
+                    <h2 class="name text-uppercase ml-3 my-2">${recruitUpdate?.nhatuyendung ? recruitUpdate.nhatuyendung : recruitInfo.nhatuyendung}</h2>
+                    <h2 class="name text-uppercase ml-3 my-2">${recruitUpdate?.diachilamviec ?recruitUpdate.diachilamviec  :recruitInfo.diachilamviec}</h2>
+                    <h2 class="name text-uppercase ml-3 my-2">${recruitUpdate?.khuvuc ? recruitUpdate.khuvuc : recruitInfo.khuvuc}</h2>
+                    <h2 class="name text-uppercase ml-3 my-2">${recruitUpdate?.thongtinlienhe ? recruitUpdate.thongtinlienhe : recruitInfo.thongtinlienhe}</h2>
+                    <h2 class="name text-uppercase ml-3 my-2">${recruitUpdate?.kinhnghiem ? recruitUpdate.kinhnghiem : recruitInfo.kinhnghiem}</h2>
+                    <h2 class="name text-uppercase ml-3 my-2">${recruitUpdate?.nganhnghe ? recruitUpdate.nganhnghe : recruitInfo.nganhnghe}</h2>
+                    <h2 class="name text-uppercase ml-3 my-2">${recruitUpdate?.trinhdongoaingu ? recruitUpdate.trinhdongoaingu : recruitInfo.trinhdongoaingu}</h2>
+                    <h2 class="name text-uppercase ml-3 my-2">${recruitUpdate?.dotuoi ? recruitUpdate.dotuoi : recruitInfo.dotuoi}</h2>
+                    <h2 class="name text-uppercase ml-3 my-2">${recruitUpdate?.yeucaukhac ? recruitUpdate.yeucaukhac : recruitInfo.yeucaukhac}</h2>
+                    <h2 class="name text-uppercase ml-3 my-2">${recruitUpdate?.gioitinh ? recruitUpdate.gioitinh : recruitInfo.gioitinh}</h2>
+                    <h2 class="name text-uppercase ml-3 my-2">${recruitUpdate?.soluongtuyen ? recruitUpdate.soluongtuyen : recruitInfo.soluongtuyen}</h2>
+                    <h2 class="name text-uppercase ml-3 my-2">${recruitUpdate?.luongcoban ? recruitUpdate.luongcoban : recruitInfo.luongcoban}</h2>
                 </div>
             </div>
         </div>
@@ -93,3 +96,6 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     </body>
 </html>
+    `
+}
+module.exports = defaultRecruit;

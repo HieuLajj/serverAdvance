@@ -14,10 +14,10 @@ const recruitSchema = new mongoose.Schema({
         type: Number,
     },
     gioitinh:{
-        type: String,
+        type: Array,
     },
     dotuoi:{
-        type: Number,
+        type: Array,
     },
     trinhdongoaingu:{
         type: String,
@@ -40,5 +40,18 @@ const recruitSchema = new mongoose.Schema({
     diachilamviec:{
         type: String,
     },
+    nganhnghe:{
+        type: String
+    },
+    anhtuyendung:{
+        type: String,
+    },
+    mau:{
+        type: String,
+    },
+    phanloai:{
+        type: String,
+        default: "default"
+    }
 });
 module.exports = mongoose.model('Recruit',recruitSchema)

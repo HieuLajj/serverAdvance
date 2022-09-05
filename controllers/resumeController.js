@@ -33,10 +33,10 @@ const resumeController = {
             res.json({success: true,id:result.id})
         } catch (error) {
             console.log(error)
-        res.status(500).json({
-            success: false,
-            message: error
-        })
+            res.status(500).json({
+                success: false,
+                message: error
+            })
         }
     },
     addResume2: async(req,res)=>{

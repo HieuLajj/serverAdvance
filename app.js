@@ -9,9 +9,11 @@ const router = require("express").Router();
 
 const userRoute = require("./routes/userRoute");
 const resumeRoute = require("./routes/resumeRoute");
+const recruitRoute = require("./routes/recruitRoute");
 
 app.use(express.static("./public"));
 app.use("/images", express.static('images'));
+app.use("/images2", express.static('images2'));
 app.set("view engine","ejs");
 app.set("views","./views");
 app.use(express.json())
@@ -37,6 +39,7 @@ mongoose.connect(process.env.MONGO_URI,{
 //ROUTER
 app.use("/laihieu/user",userRoute);
 app.use("/laihieu/resume",resumeRoute);
+app.use("/laihieu/recruit",recruitRoute);
 
 app.get('/',(req,res)=>{
     res.render("trangchu")
