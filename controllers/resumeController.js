@@ -251,7 +251,7 @@ function Xulyanhresume(anh,userInfo,userImage){
                } 
             );                   
         }
-        ); 
+    ); 
     return`http:/localhost:8000${pathImageChange.slice(-(pathImageChange.length-1)) }`        
 }
 module.exports = resumeController;

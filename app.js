@@ -10,7 +10,7 @@ const router = require("express").Router();
 const userRoute = require("./routes/userRoute");
 const resumeRoute = require("./routes/resumeRoute");
 const recruitRoute = require("./routes/recruitRoute");
-
+const postRoute = require("./routes/postRoute")
 app.use(express.static("./public"));
 app.use("/images", express.static('images'));
 app.use("/images2", express.static('images2'));
@@ -40,6 +40,7 @@ mongoose.connect(process.env.MONGO_URI,{
 app.use("/laihieu/user",userRoute);
 app.use("/laihieu/resume",resumeRoute);
 app.use("/laihieu/recruit",recruitRoute);
+app.use("/laihieu/post",postRoute)
 
 app.get('/',(req,res)=>{
     res.render("trangchu")
