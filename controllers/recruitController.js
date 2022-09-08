@@ -119,7 +119,7 @@ const recruitController = {
             res.json(exp);
           } catch (error) {
             res.json(error);
-          }
+        }
     },
     deleteRecruit: async(req,res)=>{
         const {id} = req?.params;
