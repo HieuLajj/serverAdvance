@@ -7,11 +7,45 @@ const postSchema = new mongoose.Schema({
         ref: 'User',
         require: true
     },
-    desc: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Recruit',
-        require: true
+    luongcoban:{
+        type: Number,
     },
+    soluongtuyen:{
+        type: Number,
+    },
+    gioitinh:{
+        type: Array,
+    },
+    dotuoi:{
+        type: Array,
+    },
+    trinhdongoaingu:{
+        type: String,
+    },
+    kinhnghiem:{
+        type: String,
+    },
+    yeucaukhac:{
+        type: String,
+    },
+    thongtinlienhe:{
+        type: String,
+    },
+    nhatuyendung:{
+        type: String,
+    },
+    khuvuc:{
+        type: String,
+    },
+    diachilamviec:{
+        type: String,
+    },
+    nganhnghe:{
+        type: String
+    },
+    anhtuyendung:{
+        type: String,
+    }, 
     saves : [{type: mongoose.Schema.Types.ObjectId, ref: "User"}],    
     recruitments : [{type: mongoose.Schema.Types.ObjectId, ref: "Resume"}],
     created: {
