@@ -6,5 +6,6 @@ router.put('/fetch_one/:id', isAuth, postController.fetch_one);
 router.get('/fetch_all', isAuth, postController.fetch_all);
 router.get('/find_age/:age', isAuth, postController.find_age);
 router.get('/find_wage/:wage', isAuth, postController.find_wage);
-router.get("/find_employer_career",isAuth, postController.find_employer_career);
+router.get('/find_employer_career',isAuth, postController.find_employer_career);
+router.put('/save_recruit/:id', isAuth, postController.save_recruit);
 module.exports = router;

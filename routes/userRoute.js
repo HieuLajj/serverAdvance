@@ -30,4 +30,7 @@ router.get('/sign_out',isAuth,userController.userSignOut);
 
 //UPLOAD PROFILE IMAGE
 router.post('/upload_profile',isAuth, uploads.single('profile'),userController.uploadProfile);
+
+router.put('/fetch_one/:id', isAuth, userController.fetch_one);
+router.get('/fetch_save', isAuth, userController.fetch_save);
 module.exports = router;

@@ -42,6 +42,7 @@ const userSchema = new mongoose.Schema({
     },
     save:{
         type: Array,
+        ref: 'Post',
         default:[]
     },
     tokens: [{type: Object}],   

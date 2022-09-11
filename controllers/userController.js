@@ -182,5 +182,31 @@ const userController = {
             }
         }
     }, 
+    fetch_one: async(req,res) => {
+        const {id} = req?.params;
+        try {
+         const exp = await User.findById(id).populate('save');
+         res.json(exp);
+        } catch (error) {
+         res.json(error);
+        } 
+    },
+    fetch_one: async(req,res) => {
+        const {id} = req?.params;
+        try {
+         const exp = await User.findById(id).populate('save');
+         res.json(exp);
+        } catch (error) {
+         res.json(error);
+        } 
+    },
+    fetch_save : async(req,res) => {
+        try {
+            const exp = await User.findById(req.user._id).populate('save');
+            res.json(exp.save);
+           } catch (error) {
+            res.json(error);
+        }  
+    }
 }
 module.exports = userController;

@@ -1,5 +1,6 @@
 const Post = require("../models/post")
 const Recruit = require("../models/recruit")
+const User = require("../models/user")
 const mongoose = require("mongoose")
 const postController = {
 
@@ -100,6 +101,27 @@ const postController = {
         } catch (error) {
          res.json(error);
         } 
+    },
+    //save recruit 
+    save_recruit: async(req,res) => {
+        const {id} = req?.params;
+        if(req.user._id !== id){
+            try {
+                const user = await User.findById(req.user._id);
+                if(!user?.save.includes(id)){
+                    console.log("chua co");
+                    await user.updateOne({$push:{save: id}});
+                    res.json({ success: true, log: "thanh cong"})
+                }else{
+                    console.log("co roi");
+                    res.json({ success: false, log: "da luu tu truoc do"});
+                }
+            } catch (error) {
+                console.log(error)
+                res.status(403).json("co loi xay ra");
+            }
+        }
     }
+
 }
 module.exports = postController;
