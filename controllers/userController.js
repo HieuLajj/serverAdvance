@@ -43,7 +43,7 @@ const userController = {
                 success: false,
                 message: 'email / password does not match!',
             });
-        const token =  jwt.sign({userId: user._id}, process.env.JWT_SECRET, {expiresIn:'1d'});
+        const token =  jwt.sign({userId: user._id}, process.env.JWT_SECRET, {expiresIn:'1y'});
         let oldTokens = user.tokens || [];
 
         if (oldTokens.length) {
@@ -162,7 +162,7 @@ const userController = {
                 }
             })
         }else{
-            const { name, email, phone, password,age,sex } = req.body;
+            const { name, email, phone, password, age, sex } = req.body;
             try {
                 const exp = await User.findByIdAndUpdate(
                     id,
@@ -191,15 +191,8 @@ const userController = {
          res.json(error);
         } 
     },
-    fetch_one: async(req,res) => {
-        const {id} = req?.params;
-        try {
-         const exp = await User.findById(id).populate('save');
-         res.json(exp);
-        } catch (error) {
-         res.json(error);
-        } 
-    },
+    
+    // truy van nhung ban luu tu truoc do
     fetch_save : async(req,res) => {
         try {
             const exp = await User.findById(req.user._id).populate('save');

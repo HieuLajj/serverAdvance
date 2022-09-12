@@ -102,8 +102,8 @@ const postController = {
          res.json(error);
         } 
     },
-    //save recruit 
-    save_recruit: async(req,res) => {
+    //save recruit (post) => luu id cua bai post vao save cua user (mo model user)
+    save_post: async(req,res) => {
         const {id} = req?.params;
         if(req.user._id !== id){
             try {
@@ -121,7 +121,66 @@ const postController = {
                 res.status(403).json("co loi xay ra");
             }
         }
+    },
+    //pull post
+    pull_post: async(req,res) => {
+        const {id} = req?.params;
+        if(req.user._id !== id){
+            try {
+                const user = await User.findById(req.user._id);
+                if(user?.save.includes(id)){
+                    await user.updateOne({$pull:{save: id}});
+                    res.json({ success: true, log: "xoa thanh cong"})
+                }else{
+                    res.json({ success: false, log: "ban chua luu post nay"});
+                }
+            } catch (error) {
+                console.log(error)
+                res.status(403).json("co loi xay ra");
+            }
+        }
+    }, 
+    //send recruitments => luu id cua resume (cua user) vao recruitments cua bai post
+    send_recruitments: async(req,res) => {
+        const {resumeId, postId} = req.body
+        try {
+            const post = await Post.findById(postId);
+            if(!post?.recruitments.includes(resumeId)){
+                await post.updateOne({$push:{recruitments: resumeId}});
+                res.json({ success: true, log: "gui ho so thanh cong"})
+            }else{
+                res.json({ success: false, log: "da gui ho so truoc do"});
+            }
+        } catch (error) {
+            console.log(error)
+            res.status(403).json("co loi xay ra");
+        }        
+    },
+    //delete recruitments =>xoa id cua resume (cua user) khoi recruitments cua bai post
+    delete_recruitments: async(req,res) => {
+        const {resumeId, postId} = req.body
+        try {
+            const post = await Post.findById(postId);
+            if(post?.recruitments.includes(resumeId)){
+                await post.updateOne({$pull:{recruitments: resumeId}});
+                res.json({ success: true, log: "thu hoi ho so thanh cong"})
+            }else{
+                res.json({ success: false, log: "ban chua gui ho so nay"});
+            }
+        } catch (error) {
+            console.log(error)
+            res.status(403).json("co loi xay ra");
+        }        
+    },
+    //fetch recruitments <= post
+    fetch_recruitments : async(req,res) => {
+        const {id} = req?.params;
+        try {
+            const exp = await Post.findById(id).populate('recruitments');
+            res.json(exp.recruitments);
+           } catch (error) {
+            res.json(error);
+        }  
     }
-
 }
 module.exports = postController;
