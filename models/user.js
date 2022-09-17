@@ -32,6 +32,9 @@ const userSchema = new mongoose.Schema({
     sex:{
         type: String,
     },
+    passSendEmail:{
+        type: String,
+    },
     followers:{
         type: Array,
         default:[]

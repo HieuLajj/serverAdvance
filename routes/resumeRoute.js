@@ -25,4 +25,7 @@ router.get('/fetch_all',isAuth,resumeController.fetch_all);
 router.delete('/delete/:id',isAuth,resumeController.deleteResume);
 router.get('/phanloaibieumau',isAuth,resumeController.resumePhanloaibieumau);
 router.get('/resumetype/:id',isAuth,resumeController.resumeTypes);
+router.put('/saveResume/:id',isAuth,resumeController.saveResume);
+router.post('/sendMail',isAuth,resumeController.sendMail);
+
 module.exports = router;

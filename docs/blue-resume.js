@@ -23,7 +23,7 @@ function duyenmangthanhbang(g){
     return b;
 }
 const blueResume =(anh,userInfo,userImage,bangmau)=>{
-   console.log(userImage);
+   console.log(bangmau);
    console.log("=================")
     return `
     <!doctype html>
@@ -101,7 +101,7 @@ const blueResume =(anh,userInfo,userImage,bangmau)=>{
                 <!-- SPELLING MISTAKE -->
                 <div class="left-side d-inline-block">
                     <div class="profile-image">
-                        <img class="img-fluid" src="${userImage}" alt="">
+                        <img class="img-fluid" src="${userImage ? userImage : anh.anhdaidien}" alt="">
                     </div>
                     <div class="contact ml-2 mt-2">
                         <div class="heading-text text-uppercase">Thông tin cá nhân</div>

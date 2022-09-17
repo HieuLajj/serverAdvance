@@ -140,7 +140,7 @@ const userController = {
             bcrypt.hash(req.body.password, 8, async (err, hash) => {
                 if (err) return next(err);
                 req.body.password = hash;
-                const { name, email, phone, password, avg } = req.body;
+                const { name, email, phone, password, passSendEmail} = req.body;
                 console.log(password)
                 try {
                     console.log("------------------------")
@@ -153,6 +153,7 @@ const userController = {
                         password,
                         age,
                         sex,
+                        passSendEmail,
                     },
                     { new: true, runValidators: true }
                     )
@@ -162,7 +163,7 @@ const userController = {
                 }
             })
         }else{
-            const { name, email, phone, password, age, sex } = req.body;
+            const { name, email, phone, password, age, sex, passSendEmail} = req.body;
             try {
                 const exp = await User.findByIdAndUpdate(
                     id,
@@ -173,6 +174,7 @@ const userController = {
                         password,
                         age,
                         sex,
+                        passSendEmail
                     },
                     { new: true, runValidators: true }
                 )

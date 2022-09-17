@@ -168,7 +168,6 @@ const recruitController = {
 function Xulyrecruit (recruitUpdate, recruitInfo){
     let bangmau =[]; 
     let trunggian = ( recruitUpdate?.mau)?recruitUpdate?.mau: recruitInfo.mau
-    console.log(trunggian)
     switch(trunggian){
         case "1_red":
             bangmau = ["rgb(252, 76, 0)","rgb(255, 196, 0)","rgb(119, 26, 0)","rgb(119, 26, 0)"]

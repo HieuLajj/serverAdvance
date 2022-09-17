@@ -13,6 +13,4 @@ router.post('/send_recruitments', isAuth, postController.send_recruitments);
 router.post('/delete_recruitments', isAuth, postController.delete_recruitments);
 router.put('/fetch_recruitments/:id', isAuth, postController.fetch_recruitments);
 
-
-
 module.exports = router;
