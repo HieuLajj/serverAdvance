@@ -12,5 +12,8 @@ router.put('/pull_post/:id', isAuth, postController.pull_post);
 router.post('/send_recruitments', isAuth, postController.send_recruitments);
 router.post('/delete_recruitments', isAuth, postController.delete_recruitments);
 router.put('/fetch_recruitments/:id', isAuth, postController.fetch_recruitments);
+router.get('/fetch_all_1user', isAuth, postController.fetch_all_1user);
+
+router.put('/fetch_recruitments_user/:id', isAuth,postController.fetch_recruitments_user);
 
 module.exports = router;

@@ -48,6 +48,7 @@ const userSchema = new mongoose.Schema({
         ref: 'Post',
         default:[]
     },
+    recruitments :[{type: mongoose.Schema.Types.ObjectId, ref: "Post"}],
     tokens: [{type: Object}],   
 });
 userSchema.pre('save', function (next) {

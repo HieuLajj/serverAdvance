@@ -55,6 +55,15 @@ const postController = {
             res.json(error);
         } 
     },
+    // tim tat ca cac bai post cua 1 user
+    fetch_all_1user : async (req,res)=>{
+        try {
+            const exp = await Post.find({"user" : req.user._id}).populate('user');
+            res.json(exp);
+        } catch (error){
+            res.json(error);
+        }
+    },
     //tim kiem theo ten nha tuyen dung hoac nganh nghe
     //khu vuc lam viec dia chi lam viec
     find_employer_career: async(req,res) => {
@@ -173,7 +182,8 @@ const postController = {
         }        
     },
     //fetch recruitments <= post
-    fetch_recruitments : async(req,res) => {
+    //tim tat ca nhung bai resume duoc gui vao bai post nay
+    fetch_recruitments : async (req,res) => {
         const {id} = req?.params;
         try {
             const exp = await Post.findById(id).populate('recruitments');
@@ -181,6 +191,30 @@ const postController = {
            } catch (error) {
             res.json(error);
         }  
+    },
+
+    //fetch_recruitment_one
+    //tim tat ca nhung bai resume cua nguoi dung (1 nguoi, nguoi dang su dung) gui vao bai post nay
+    fetch_recruitments_user : async (req,res) =>{
+        //console.log(req.user._id.toString())
+        const {id} = req?.params;
+        try {
+            const exp = await Post.findById(id).populate('recruitments').exec(
+                
+                (err, items)=>{
+                    let a = items.recruitments;
+                    a = a.filter(function(item){
+                       // return item.user == "6317f42dd147faa99ca44be2"
+                        return item.user == req.user._id.toString();
+                    })
+                    res.json(a);
+                }
+
+                );
+           
+        } catch (error) {
+            res.json(error);
+        }
     }
 }
 module.exports = postController;
