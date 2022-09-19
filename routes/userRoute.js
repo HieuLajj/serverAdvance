@@ -33,4 +33,9 @@ router.post('/upload_profile',isAuth, uploads.single('profile'),userController.u
 
 router.put('/fetch_one/:id', isAuth, userController.fetch_one);
 router.get('/fetch_save', isAuth, userController.fetch_save);
+
+//follow
+router.put('/follow/:id',isAuth,userController.follow);
+//unfollow
+router.put('/unfollow/:id',isAuth,userController.unfollow);
 module.exports = router;

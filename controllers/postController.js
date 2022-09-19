@@ -55,7 +55,7 @@ const postController = {
             res.json(error);
         } 
     },
-    // tim tat ca cac bai post cua 1 user
+    // tim tat ca cac bai post cua 1 user (cua nha tuyen dung dang len)
     fetch_all_1user : async (req,res)=>{
         try {
             const exp = await Post.find({"user" : req.user._id}).populate('user');
@@ -154,8 +154,10 @@ const postController = {
         const {resumeId, postId} = req.body
         try {
             const post = await Post.findById(postId);
+            const user = await User.findById(req.user._id);
             if(!post?.recruitments.includes(resumeId)){
                 await post.updateOne({$push:{recruitments: resumeId}});
+                await user.updateOne({$push:{recruitments: postId}});
                 res.json({ success: true, log: "gui ho so thanh cong"})
             }else{
                 res.json({ success: false, log: "da gui ho so truoc do"});
@@ -209,9 +211,7 @@ const postController = {
                     })
                     res.json(a);
                 }
-
-                );
-           
+                );        
         } catch (error) {
             res.json(error);
         }

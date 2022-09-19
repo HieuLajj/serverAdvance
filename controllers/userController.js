@@ -184,7 +184,7 @@ const userController = {
             }
         }
     }, 
-    fetch_one: async(req,res) => {
+    fetch_one : async(req,res) => {
         const {id} = req?.params;
         try {
          const exp = await User.findById(id).populate('save');
@@ -202,6 +202,49 @@ const userController = {
            } catch (error) {
             res.json(error);
         }  
+    },
+    //follow a user
+    follow : async(req,res) => {
+        const {id} = req?.params;
+        try {
+            if(req.user._id.toString() != id){
+                const userfollow = await User.findById(id);
+                const currentUser = await User.findById(req.user._id);
+                if(!userfollow.followers.includes(req.user._id)){
+                    await userfollow.updateOne({$push:{followers: req.user._id}});
+                    await currentUser.updateOne({$push: {followins: id }});
+                    res.status(200).json("user has been follwed");
+                }else{
+                    res.status(403).json("you allready follow this user")
+                }
+            }else{
+                res.status(403).json("you cant unfollow yourself")
+            }
+        } catch (error) {
+            
+        }
+    },
+
+    //unfollow a user
+    unfollow : async(req,res) => {
+        const {id} = req?.params;
+        try {
+            if(req.user._id.toString() != id){
+                const userfollow = await User.findById(id);
+                const currentUser = await User.findById(req.user._id);
+                if(userfollow.followers.includes(req.user._id)){
+                    await userfollow.updateOne({$pull:{followers: req.user._id}});
+                    await currentUser.updateOne({$pull: {followins: id }});
+                    res.status(200).json("user has been unfollwed");
+                }else{
+                    res.status(403).json("you dont follow this user")
+                }
+            }else{
+                res.status(403).json("you cant unfollow yourself")
+            }
+        } catch (error) {
+            
+        }
     }
 }
 module.exports = userController;

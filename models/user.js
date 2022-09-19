@@ -37,11 +37,13 @@ const userSchema = new mongoose.Schema({
     },
     followers:{
         type: Array,
+        ref: "User",
         default:[]
     },
     followins:{
         type: Array,
-        default:[]
+        ref:"User",
+        default:[],
     },
     save:{
         type: Array,
