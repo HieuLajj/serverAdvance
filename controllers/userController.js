@@ -7,68 +7,98 @@ const cloudinary = require('../utils/cloudinary');
 const userController = {
     //ADD USER
     add_user: async(req,res)=>{
-        const {name,email,password,phone,typer} = req.body
-        const isNewUser = await User.isThisEmailInUse(email);
-        if (!isNewUser){
-            return res.json({
-                success: false,
-                message: 'This email is already in use, try sign-in',
-            });}
-        else{
+        // su dung uuid services
+        const {uuid,typer,email,name} =  req.body;
+        try {
             const user = await User.create({
-               name,
-               email,
-               password,
-               phone,
-               typer
+                uuid,
+                typer,   
+                email,
+                name,   
             });
-            //await user.save();
-            res.json(user);
+            res.json({success: true,user});
+        } catch (error) {
+            console.log(error);
+            res.json(error)
         }
     },
+        // khong su dung uuid services
+
+        // const {name,email,password,phone,typer} = req.body
+        // const isNewUser = await User.isThisEmailInUse(email);
+        // if (!isNewUser){
+        //     return res.json({
+        //         success: false,
+        //         message: 'This email is already in use, try sign-in',
+        //     });}
+        // else{
+        //     const user = await User.create({
+        //        name,
+        //        email,
+        //        password,
+        //        phone,
+        //        typer
+        //     });
+        //     //await user.save();
+        //     res.json(user);
+        // }
+    //},
 
     //SIGN IN
     userSignIn: async(req,res)=>{
-        const { email, password } = req.body;
-        const user = await User.findOne({ email });
-        if (!user)
-            return res.json({
-                success: false,
-                message: 'user not found, with the given email!',
-            });
-      
-        const isMatch = await user.comparePassword(password);
-        if (!isMatch)
-            return res.json({
-                success: false,
-                message: 'email / password does not match!',
-            });
-        const token =  jwt.sign({userId: user._id}, process.env.JWT_SECRET, {expiresIn:'1y'});
-        let oldTokens = user.tokens || [];
+    
+        // dang nhap su dung uuid
+        const {uuid} = req.body;
+        try {
+            const user = await User.findOne({uuid});
+            const token =  jwt.sign({userId: user._id}, process.env.JWT_SECRET, {expiresIn:'1y'});
+            res.json({success: true,user, token})
+        } catch (error) {
+            res.json({success: false})
+        }
 
-        if (oldTokens.length) {
-            oldTokens = oldTokens.filter(t => {
-            const timeDiff = (Date.now() - parseInt(t.signedAt)) / 1000;
-                if (timeDiff < 86400) {
-                    return t;
-                }
-            });
-        }
-        await User.findByIdAndUpdate(user._id, {tokens:[...oldTokens, {token, signedAt: Date.now().toString()}]})       
-        const userInfo = {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            phone: user.phone,
-            typer: user.typer,
-            age: user.age,
-            sex: user.sex,
-            followers: user.followers,
-            followins: user.followins,
-            save: user.save,
-            avatar: user.avatar ? user.avatar : '',
-        }
-        res.json({success: true,user:userInfo, token})
+        // khong su dung uuid
+
+        // const { email, password } = req.body;
+        // const user = await User.findOne({ email });
+        // if (!user)
+        //     return res.json({
+        //         success: false,
+        //         message: 'user not found, with the given email!',
+        //     });
+      
+        // const isMatch = await user.comparePassword(password);
+        // if (!isMatch)
+        //     return res.json({
+        //         success: false,
+        //         message: 'email / password does not match!',
+        //     });
+        // const token =  jwt.sign({userId: user._id}, process.env.JWT_SECRET, {expiresIn:'1y'});
+        // let oldTokens = user.tokens || [];
+
+        // if (oldTokens.length) {
+        //     oldTokens = oldTokens.filter(t => {
+        //     const timeDiff = (Date.now() - parseInt(t.signedAt)) / 1000;
+        //         if (timeDiff < 86400) {
+        //             return t;
+        //         }
+        //     });
+        // }
+        // await User.findByIdAndUpdate(user._id, {tokens:[...oldTokens, {token, signedAt: Date.now().toString()}]})       
+        // const userInfo = {
+        //     id: user.id,
+        //     name: user.name,
+        //     email: user.email,
+        //     phone: user.phone,
+        //     typer: user.typer,
+        //     age: user.age,
+        //     sex: user.sex,
+        //     followers: user.followers,
+        //     followins: user.followins,
+        //     save: user.save,
+        //     avatar: user.avatar ? user.avatar : '',
+        // }
+        // res.json({success: true,user:userInfo, token})
     },
 
     //UPDATE IMAGE PROFILE
@@ -134,55 +164,74 @@ const userController = {
     },
     //UPLOAD PROFILE
     uploadProfileInformation: async (req,res) => {
-        const {id} = req?.params;
-        if(req.body.password!=null){
-            
-            bcrypt.hash(req.body.password, 8, async (err, hash) => {
-                if (err) return next(err);
-                req.body.password = hash;
-                const { name, email, phone, password, passSendEmail} = req.body;
-                console.log(password)
-                try {
-                    console.log("------------------------")
-                    const exp = await User.findByIdAndUpdate(
-                    id,
-                    {
-                        name,
-                        email,
-                        phone,
-                        password,
-                        age,
-                        sex,
-                        passSendEmail,
-                    },
-                    { new: true, runValidators: true }
-                    )
-                    res.json({success: true, exp});
-                } catch (error) {
-                    res.json(error)
-                }
-            })
-        }else{
-            const { name, email, phone, password, age, sex, passSendEmail} = req.body;
-            try {
-                const exp = await User.findByIdAndUpdate(
-                    id,
-                    {
-                        name,
-                        email,
-                        phone,
-                        password,
-                        age,
-                        sex,
-                        passSendEmail
-                    },
-                    { new: true, runValidators: true }
-                )
-                res.json({success: true, exp});
-            } catch (error) {
-                res.json(error)
-            }
+        const { name, email, phone, passSendEmail, age, sex} = req.body;
+        try {
+            const exp = await User.findByIdAndUpdate(
+                req.user._id,
+                {
+                    name,
+                    email,
+                    phone,
+                    age,
+                    sex,
+                    passSendEmail,
+                },
+                { new: true, runValidators: true }
+            )
+            res.json({success: true, exp});
+        } catch (error) {
+            res.json(error)
         }
+
+        // const {id} = req?.params;
+        // if(req.body.password!=null){
+            
+        //     bcrypt.hash(req.body.password, 8, async (err, hash) => {
+        //         if (err) return next(err);
+        //         req.body.password = hash;
+        //         const { name, email, phone, password, passSendEmail} = req.body;
+        //         console.log(password)
+        //         try {
+        //             console.log("------------------------")
+        //             const exp = await User.findByIdAndUpdate(
+        //             id,
+        //             {
+        //                 name,
+        //                 email,
+        //                 phone,
+        //                 password,
+        //                 age,
+        //                 sex,
+        //                 passSendEmail,
+        //             },
+        //             { new: true, runValidators: true }
+        //             )
+        //             res.json({success: true, exp});
+        //         } catch (error) {
+        //             res.json(error)
+        //         }
+        //     })
+        // }else{
+        //     const { name, email, phone, password, age, sex, passSendEmail} = req.body;
+        //     try {
+        //         const exp = await User.findByIdAndUpdate(
+        //             id,
+        //             {
+        //                 name,
+        //                 email,
+        //                 phone,
+        //                 password,
+        //                 age,
+        //                 sex,
+        //                 passSendEmail
+        //             },
+        //             { new: true, runValidators: true }
+        //         )
+        //         res.json({success: true, exp});
+        //     } catch (error) {
+        //         res.json(error)
+        //     }
+        // }
     }, 
     fetch_one : async(req,res) => {
         const {id} = req?.params;

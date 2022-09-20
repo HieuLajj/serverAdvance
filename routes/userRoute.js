@@ -17,13 +17,15 @@ const uploads = multer({ storage, fileFilter });
 
 
 // ADD USER
-router.post("/add_user",validateUserSignUp,userVlidation,userController.add_user);
+//router.post("/add_user",validateUserSignUp,userVlidation,userController.add_user);
+router.post("/add_user",userController.add_user);
 // SIGN IN
-router.post('/sign_in',validateUserSignIn,userVlidation,userController.userSignIn);
+//router.post('/sign_in',validateUserSignIn,userVlidation,userController.userSignIn);
+router.post('/sign_in',userController.userSignIn);
 //SIGN BY TOKEN
 router.post('/sign_in2/:token', isAuth, userController.userSignIn2)
 //UPDATE PROFILE
-router.put('/update/:id',isAuth,userController.uploadProfileInformation);
+router.post('/update',isAuth,userController.uploadProfileInformation);
 
 //SIGN OUT
 router.get('/sign_out',isAuth,userController.userSignOut);
