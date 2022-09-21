@@ -67,7 +67,7 @@ const postController = {
     //tim kiem theo ten nha tuyen dung hoac nganh nghe
     //khu vuc lam viec dia chi lam viec
     find_employer_career: async(req,res) => {
-
+        const {follow} = req.body
         const keyword = req.query.search
         ? {
           $or: [
@@ -80,46 +80,101 @@ const postController = {
         : {};
 
         try {
-         const exp = await Post.find(keyword).populate('user')
-         res.json(exp);        
+            if(follow == "true"){
+                let aaa=[];
+                const currentUser = await User.findById(req.user._id);            
+                await Promise.all(
+                currentUser.followins.map(async(friendId) => {
+                    const keyword2 = req.query.search
+                    ? {
+                        $and:[
+                            {
+                                $or: [
+                                    { nganhnghe: { $regex: req.query.search, $options: "i" } },
+                                    { nhatuyendung: { $regex: req.query.search, $options: "i" } },
+                                    { khuvuc: { $regex: req.query.search, $options: "i" } },
+                                    { diachilamviec: { $regex: req.query.search, $options: "i" } },
+                                  ],
+                            },
+                            {"user":friendId},
+                        ]
+                      }
+                    : {};
+                    await Post.find(keyword2).populate('user').then((data)=>{
+                        aaa = aaa.concat(data)
+                    }); 
+                }
+                ))
+                res.json(aaa);
+            }
+            else{
+                const exp = await Post.find(keyword).populate('user')
+                res.json(exp);  
+            }      
         } catch (error) {
          res.json(error);
         } 
     },
     //find theo tuoi di
     find_age: async(req,res) => {
-        const {age} = req?.params;
-        console.log(age)
+        
+        const {age, follow} = req.body
         try {
-         const exp = await Post.find({   
-            $and : [
-                { "dotuoi" :{$lte: Number(age)} },
-                { "dotuoi" :{$gte: Number(age)} },  
-            ]}).populate('user')
-         res.json(exp);        
+            if(follow == "true"){
+                let aaa=[];
+                const currentUser = await User.findById(req.user._id);            
+                await Promise.all(
+                currentUser.followins.map(async(friendId) => {
+                    await Post.find({
+                        $and:[
+                            {"user":friendId},
+                            { "dotuoi" :{$lte: Number(age)} },
+                            { "dotuoi" :{$gte: Number(age)} },
+                        ]}).populate('user').then((data)=>{
+                        aaa = aaa.concat(data)
+                    }); 
+                }
+                ))
+                res.json(aaa);
+            }
+            else{
+                const exp = await Post.find({   
+                    $and : [
+                        { "dotuoi" :{$lte: Number(age)} },
+                        { "dotuoi" :{$gte: Number(age)} },  
+                    ]}).populate('user')
+                res.json(exp);   
+            }     
         } catch (error) {
          res.json(error);
         } 
     },
     //find theo luong
     find_wage: async(req,res) => {
-        const {wage} = req?.params;
+        const {wage, follow
+            } = req.body
         try {
-            let aaa=[];
-            const currentUser = await User.findById(req.user._id);
-            
-            var friendPosts = await Promise.all(
-            currentUser.followins.map(async(friendId) => {
-                await Post.find({"user":friendId}).then((data)=>{
-                    aaa = aaa.concat(data)
-                }); 
+            if(follow == "true"){
+                let aaa=[];
+                const currentUser = await User.findById(req.user._id);            
+                await Promise.all(
+                currentUser.followins.map(async(friendId) => {
+                    await Post.find({
+                        $and:[
+                            {"user":friendId},
+                            {"luongcoban" :{$gte: Number(wage)}}
+                        ]}).populate('user').then((data)=>{
+                        aaa = aaa.concat(data)
+                    }); 
+                }
+                ))
+                res.json(aaa);
+            }else{
+                const exp = await Post.find({"luongcoban" :{$gte: Number(wage)}}).populate('user')
+                res.json(exp);
             }
-            ))
-            res.json(aaa); 
-            //const exp = await Post.find({"luongcoban" :{$gte: Number(wage)}}).populate('user')
-            //const exp = await Post.find({"user": "632aee1a5b45c015497b3fb5"})       
         } catch (error) {
-            console.log(error)
+            res.json(error)
         } 
     },
     //save recruit (post) => luu id cua bai post vao save cua user (mo model user)
