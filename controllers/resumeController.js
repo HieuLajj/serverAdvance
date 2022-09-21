@@ -10,6 +10,12 @@ const fs = require('fs');
 //const cloudinary = require('../helper/imageUpload')
 //const blueResume = require("./docs/blue-resume");
 const blueResume = require("../docs/blue-resume");
+const resume1_en = require("../docs/resume1_en");
+const resume1_vn = require("../docs/resume1_vn");
+const resume2_en = require("../docs/resume2_en");
+const resume2_vn = require("../docs/resume2_vn");
+const resume3_en = require("../docs/resume3_en");
+const resume3_vn = require("../docs/resume3_vn");
 const mongoose = require("mongoose");
 const nodeHtmlToImage = require('node-html-to-image');
 const nodemailer = require("nodemailer");
@@ -72,13 +78,14 @@ const resumeController = {
             sohokhau,socccd,sothich,tinhcach,quequan,trinhdovanhoa,
             nguyenvong,nganhnghe,dieukiendacbiet,mucluong,vung,tinh,
             diachihientai,anhchungchi,mau,phanloaibieumau,dienthoai,
-            ngaysinh,tuoi,linhvucchuyenmon,kynang,chungchi
+            ngaysinh,tuoi,linhvucchuyenmon,kynang,chungchi,ngonngucuamau,gioitinh
             } = req.body
             const result = await Resume.findByIdAndUpdate(
                 id,
                 {
                     ten,
                     chieucao,
+                    gioitinh,
                     cannang,
                     kinhnghiem,
                     hocvan,
@@ -104,6 +111,7 @@ const resumeController = {
                     mau,
                     linhvucchuyenmon,
                     chungchi,
+                    ngonngucuamau,
                     anhbieumau: Xulyanhresume(anh, userInfo = req.body, userImage=anh.anhdaidien),
                     phanloaibieumau
                 },
@@ -124,7 +132,6 @@ const resumeController = {
         let userInfo;
         let anh = await Resume.findById(id);
         if(anh.anhbieumau!=null){
-            console.log(anh.anhbieumau)
             fs.unlink(`.${anh.anhbieumau.slice(20)}`, (err) => {
                 if (err) {
                 console.error(err)
@@ -146,8 +153,6 @@ const resumeController = {
                 crop: 'fill'
               });
             let abc = result.url
-            console.log(abc)
-            console.log("----------------")
             const result2 = await Resume.findByIdAndUpdate(
                 id,
                 {  anhdaidien: result.url,
@@ -334,31 +339,58 @@ async function CreatePDF (id, mya){
     }
 }
 function Xulyanhresume(anh,userInfo,userImage){ 
-    let bangmau =[]; 
-    let trunggian = (userInfo?.mau)?userInfo?.mau:anh.mau
-    console.log(trunggian)
-    switch(trunggian){
-        case "1_red":
-            bangmau = ["rgb(252, 76, 0)","rgb(255, 196, 0)","rgb(119, 26, 0)","rgb(119, 26, 0)"]
-            break
-        case "1_blue":
-            bangmau = ["rgb(183, 182, 255)","rgb(91, 88, 255)","rgb(12, 36, 58)","rgb(1, 0, 66)"]
-            break
-        case "1_green":
-            bangmau = ["rgb(139, 247, 205)","rgb(183, 217, 255)","rgb(0, 119, 89)","rgb(0, 119, 89)"]
-            break
-        case "1_yellow":
-            bangmau = ["rgb(200, 255, 2)","rgb(247, 251, 5)","rgb(255, 162, 2)","rgb(255, 162, 2)"]
-            break  
+    let resumeT;
+    let mau = (userInfo?.mau) ? userInfo?.mau : anh.mau
+    let ngonngucuamau = (userInfo?.ngonngucuamau) ? userInfo?.ngonngucuamau : anh.ngonngucuamau
+    switch(mau){
+        case "resume1":
+            if(ngonngucuamau == "en"){
+                resumeT = resume1_en
+            }else{
+                resumeT = resume1_vn
+            }
+            break;
+        case "resume2":
+            if(ngonngucuamau == "en"){
+                resumeT = resume2_en
+            }else{
+                resumeT = resume2_vn
+            }
+            break;
+        case "resume3":
+            if(ngonngucuamau == "en"){
+                resumeT = resume3_en
+            }else{
+                resumeT = resume3_vn
+            }
+        break;
         default:
-            bangmau = ["rgb(252, 76, 0)","rgb(255, 196, 0)","rgb(119, 26, 0)","rgb(119, 26, 0)"]
-            break 
+            break;
     }
+    // let bangmau =[]; 
+    // let trunggian = (userInfo?.mau)?userInfo?.mau:anh.mau
+    // switch(trunggian){
+    //     case "1_red":
+    //         bangmau = ["rgb(252, 76, 0)","rgb(255, 196, 0)","rgb(119, 26, 0)","rgb(119, 26, 0)"]
+    //         break
+    //     case "1_blue":
+    //         bangmau = ["rgb(183, 182, 255)","rgb(91, 88, 255)","rgb(12, 36, 58)","rgb(1, 0, 66)"]
+    //         break
+    //     case "1_green":
+    //         bangmau = ["rgb(139, 247, 205)","rgb(183, 217, 255)","rgb(0, 119, 89)","rgb(0, 119, 89)"]
+    //         break
+    //     case "1_yellow":
+    //         bangmau = ["rgb(200, 255, 2)","rgb(247, 251, 5)","rgb(255, 162, 2)","rgb(255, 162, 2)"]
+    //         break  
+    //     default:
+    //         bangmau = ["rgb(252, 76, 0)","rgb(255, 196, 0)","rgb(119, 26, 0)","rgb(119, 26, 0)"]
+    //         break 
+    // }
     let pathImage = `./images/image${Date.now()}toHieulajj.png`;
     let pathImageChange = `./images/image${Date.now()}toHieulajj1.png`
     nodeHtmlToImage({
         output: pathImage,
-        html: blueResume(anh, userInfo, userImage, bangmau),
+        html: resumeT(anh, userInfo, userImage),
         content: { name: 'you' }
     }).then(() => 
         {

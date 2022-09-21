@@ -105,10 +105,21 @@ const postController = {
     find_wage: async(req,res) => {
         const {wage} = req?.params;
         try {
-            const exp = await Post.find({"luongcoban" :{$gte: Number(wage)}}).populate('user')
-            res.json(exp);        
+            let aaa=[];
+            const currentUser = await User.findById(req.user._id);
+            
+            var friendPosts = await Promise.all(
+            currentUser.followins.map(async(friendId) => {
+                await Post.find({"user":friendId}).then((data)=>{
+                    aaa = aaa.concat(data)
+                }); 
+            }
+            ))
+            res.json(aaa); 
+            //const exp = await Post.find({"luongcoban" :{$gte: Number(wage)}}).populate('user')
+            //const exp = await Post.find({"user": "632aee1a5b45c015497b3fb5"})       
         } catch (error) {
-         res.json(error);
+            console.log(error)
         } 
     },
     //save recruit (post) => luu id cua bai post vao save cua user (mo model user)

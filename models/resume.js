@@ -91,6 +91,13 @@ const resumeSchema = new mongoose.Schema({
     mau:{
         type: String
     },
+    gioitinh:{
+        type: String,
+        default:""
+    },
+    ngonngucuamau:{
+        type: String
+    },
     anhbieumau:{
         type: String
     },
