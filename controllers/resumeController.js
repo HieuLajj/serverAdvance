@@ -16,6 +16,8 @@ const resume2_en = require("../docs/resume2_en");
 const resume2_vn = require("../docs/resume2_vn");
 const resume3_en = require("../docs/resume3_en");
 const resume3_vn = require("../docs/resume3_vn");
+const resume4_en = require("../docs/resume4_en");
+const resume4_vn = require("../docs/resume4_vn");
 const mongoose = require("mongoose");
 const nodeHtmlToImage = require('node-html-to-image');
 const nodemailer = require("nodemailer");
@@ -362,6 +364,12 @@ function Xulyanhresume(anh,userInfo,userImage){
                 resumeT = resume3_en
             }else{
                 resumeT = resume3_vn
+            }
+        case "resume4":
+            if(ngonngucuamau == "en"){
+                resumeT = resume4_en
+            }else{
+                resumeT = resume4_vn
             }
         break;
         default:

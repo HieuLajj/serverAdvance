@@ -49,6 +49,12 @@ const recruitSchema = new mongoose.Schema({
     mau:{
         type: String,
     },
+    motacongviec:{
+        type: String,
+    },
+    yeucauungvien:{
+        type: String,
+    },
     phanloai:{
         type: String,
         default: "default"

@@ -1,4 +1,61 @@
-<!doctype html>
+function duyetmang(g){
+    let b=""
+    g.forEach(element => {
+        b+= `${element}<br>`
+    })
+    return b;
+}
+function duyetmang2(g){
+    let b=""
+    g.forEach(element => {
+        b+= `<li>${element}</li>`
+    })
+    return b;
+}
+function duyenmangthanhbang(g){
+    let b=""
+    for (key in g){
+        b+= `<tr class="border">
+                <td>${key}</td>
+                <td>${g[key]}</td>
+            </tr>`
+    }
+    return b;
+}
+function duyenmanghocvan(g){
+    let b=""
+    for (key in g){
+        b+= `
+            <div class="cvo-info fz-13 row">
+                <div class="cvo-info-school-wraper">
+                    <span class="cvo-info-school">${g[key]}</span>
+                </div>
+                <div class="cvo-info-time">
+                    <span class="cvo-info-start">${key}</span>
+                </div>
+            </div>
+            `
+    }
+    return b;
+}
+function duyenmangkinhnghiem(g){
+    let b=""
+    for (key in g){
+        b+= `
+        <li>
+                 <div class="date">${key}</div> 
+                 <div class="info">
+                      <p class="semi-bold">${g[key]}</p> 
+        
+                 </div>
+             </li>
+            `
+    }
+    return b;
+}
+const resume4_en = (anh, userInfo, userImage) => {
+    return`
+    <!doctype html>
 <html lang="en">
 
 <head>
@@ -217,14 +274,14 @@ body {
 <div class="resume">
     <div class="resume_left">
       <div class="resume_profile">
-        <img class="img-fluid" src="https://i.pinimg.com/564x/91/7f/1a/917f1ae7f2f72e5a975e207d1a9fed54.jpg"
+        <img class="img-fluid" src="${userImage ? userImage : anh.anhdaidien}"
         alt="">
       </div>
       <div class="resume_content">
         <div class="resume_item resume_info">
           <div class="title">
-            <p class="bold">Halee</p>
-            <p class="regular">Designer</p>
+            <p class="bold">${userInfo?.ten? userInfo?.ten: anh.ten}</p>
+            <p class="regular">${userInfo?.nganhnghe? userInfo?.nganhnghe: anh.nganhnghe}</p>
           </div>
           <ul>
             <li>
@@ -232,7 +289,7 @@ body {
                 <i class="fas fa-map-signs"></i>
               </div>
               <div class="data">
-                hanoi
+              ${userInfo?.diachihientai? userInfo?.diachihientai: anh.diachihientai}
               </div>
             </li>
             <li>
@@ -240,7 +297,7 @@ body {
                 <i class="fas fa-mobile-alt"></i>
               </div>
               <div class="data">
-                +324 4445678
+              ${userInfo?.dienthoai? userInfo?.dienthoai: anh.dienthoai}
               </div>
             </li>
             <li>
@@ -248,7 +305,7 @@ body {
                 <i class="fas fa-envelope"></i>
               </div>
               <div class="data">
-                halee@gmail.com
+              ${userInfo?.email? userInfo?.email: anh.email}
               </div>
             </li>
             <li>
@@ -346,30 +403,14 @@ body {
          <div class="title">
             <p class="bold">Objective</p>
           </div>
-         <p>  Multi-telented with knowledge of accounting & financial analysis, digital merketing,
-         web development and others consistently rewarded for success in planning and operational
-         improvements. Expert in IT and good in delivering effective and engaging presentations to
-         variety of audiences
+         <p> ${userInfo?.nguyenvong? userInfo?.nguyenvong: anh.nguyenvong}
         </p>  </div>
      <div class="resume_item resume_work">
          <div class="title">
             <p class="bold">experience Work</p>
           </div>
          <ul>
-             <li>
-                 <div class="date">2013 - 2015</div> 
-                 <div class="info">
-                      <p class="semi-bold">Nhân viên kỹ thuật.</p> 
-        
-                 </div>
-             </li>
-             <li>
-               <div class="date">2015 - 2017</div>
-               <div class="info">
-                      <p class="semi-bold">Nhân viên kỹ thuật.</p> 
-                 </div>
-             </li>
-        
+         ${duyenmangkinhnghiem(userInfo?.kinhnghiem? userInfo?.kinhnghiem: anh.kinhnghiem)}    
          </ul>
      </div>
      <div class="resume_item resume_education">
@@ -377,32 +418,8 @@ body {
             <p class="bold">Education</p>
           </div>
        <ul>
-             <li>
-                 <div class="date">2010 - 2013</div> 
-                 <div class="info">
-                      <p class="semi-bold">Web Designing (Texas University)</p> 
-                   <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum, voluptatibus!</p>
-                 </div>
-             </li>
-             <li>
-               <div class="date">2000 - 2010</div>
-               <div class="info">
-                      <p class="semi-bold">Texas International School</p> 
-                   <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum, voluptatibus!</p>
-                 </div>
-             </li>
+       ${duyenmangkinhnghiem(userInfo?.hocvan? userInfo?.hocvan: anh.hocvan)}
          </ul>
-     </div>
-     <div class="resume_item resume_hobby">
-       <div class="title">
-            <p class="bold">Hobby</p>
-          </div>
-        <ul>
-          <li> Bóng đá
-           </li>
-          <li> Du lịch</li>
-          <li>Xem phim</li>
-       </ul>
      </div>
    </div>
  </div>
@@ -418,3 +435,6 @@ body {
     crossorigin="anonymous"></script>
 
 </html>
+    `
+}
+module.exports = resume4_en;

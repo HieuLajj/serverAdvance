@@ -2,14 +2,14 @@ const Recruit = require("../models/recruit")
 const sharp = require('sharp');
 const fs = require('fs');
 const mongoose = require("mongoose")
-const defaultRecruit = require("../docs/default_recruit");
+const defaultRecruit = require("../docs/recruit");
 const nodeHtmlToImage = require('node-html-to-image');
 const recruitController = {
     add_recruit: async(req,res)=>{
         const {luongcoban, soluongtuyen, gioitinh,
         dotuoi, trinhdongoaingu, kinhnghiem, yeucaukhac,
         thongtinlienhe, nhatuyendung, khuvuc, diachilamviec,
-        mau,phanloai,nganhnghe
+        mau,phanloai,nganhnghe, motacongviec, yeucauungvien
         } = req.body;
 
         const {user} = req;
@@ -34,6 +34,8 @@ const recruitController = {
                 khuvuc,
                 diachilamviec,
                 phanloai,
+                motacongviec,
+                yeucauungvien,
                 anhtuyendung: Xulyrecruit(
                     recruitUpdate = req.body
                 ),
@@ -70,7 +72,7 @@ const recruitController = {
             const {luongcoban, soluongtuyen, gioitinh,
                 dotuoi, trinhdongoaingu, kinhnghiem, yeucaukhac,
                 thongtinlienhe, nhatuyendung, khuvuc, diachilamviec,
-                mau,phanloai,nganhnghe
+                mau,phanloai,nganhnghe,motacongviec,yeucauungvien,
                 } = req.body;
             const result = await Recruit.findByIdAndUpdate(
                 id,
@@ -89,6 +91,8 @@ const recruitController = {
                     diachilamviec,
                     mau,
                     phanloai,    
+                    motacongviec,
+                    yeucauungvien,
                     anhtuyendung: Xulyrecruit(recruitUpdate = req.body, recruitInfo),                   
                 },
                 { new: true, runValidators: true }
@@ -166,30 +170,11 @@ const recruitController = {
 }
 
 function Xulyrecruit (recruitUpdate, recruitInfo){
-    let bangmau =[]; 
-    let trunggian = ( recruitUpdate?.mau)?recruitUpdate?.mau: recruitInfo.mau
-    switch(trunggian){
-        case "1_red":
-            bangmau = ["rgb(252, 76, 0)","rgb(255, 196, 0)","rgb(119, 26, 0)","rgb(119, 26, 0)"]
-            break
-        case "1_blue":
-            bangmau = ["rgb(183, 182, 255)","rgb(91, 88, 255)","rgb(12, 36, 58)","rgb(1, 0, 66)"]
-            break
-        case "1_green":
-            bangmau = ["rgb(139, 247, 205)","rgb(183, 217, 255)","rgb(0, 119, 89)","rgb(0, 119, 89)"]
-            break
-        case "1_yellow":
-            bangmau = ["rgb(200, 255, 2)","rgb(247, 251, 5)","rgb(255, 162, 2)","rgb(255, 162, 2)"]
-            break  
-        default:
-            bangmau = ["rgb(252, 76, 0)","rgb(255, 196, 0)","rgb(119, 26, 0)","rgb(119, 26, 0)"]
-            break 
-    }
     let pathImage = `./images2/image${Date.now()}toHieulajj.png`;
     let pathImageChange = `./images2/image${Date.now()}toHieulajj1.png`;
     nodeHtmlToImage({
         output: pathImage,
-        html: defaultRecruit(recruitUpdate, recruitInfo, bangmau),
+        html: defaultRecruit(recruitUpdate, recruitInfo),
         content: { name: 'you' }
     }).then(() => 
         {

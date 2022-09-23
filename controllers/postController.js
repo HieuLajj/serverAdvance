@@ -117,8 +117,8 @@ const postController = {
     },
     //find theo tuoi di
     find_age: async(req,res) => {
-        
-        const {age, follow} = req.body
+        const {age,follow} = req.body
+        const user = await User.findById(req.user._id);
         try {
             if(follow == "true"){
                 let aaa=[];
@@ -135,7 +135,34 @@ const postController = {
                     }); 
                 }
                 ))
-                res.json(aaa);
+                let bbb = []
+                await Promise.all(
+                    aaa.map(async(element)=>{
+                        let b = {
+                            _id : element._id,
+                            user : element.user,
+                            luongcoban : element.luoncoban,
+                            soluongtuyen: element.soluongtuyen,
+                            gioitinh: element.gioitinh,
+                            dotuoi: element.dotuoi,
+                            trinhdongoaingu: element.trinhdongoaingu,
+                            kinhnghiem: element.kinhnghiem,
+                            yeucaukhac: element.yeucaukhac,
+                            thongtinlienhe: element.thongtinlienhe,
+                            nhatuyendung: element.nhatuyendung,
+                            khuvuc: element.khuvuc,
+                            diachilamviec: element.diachilamviec,
+                            nganhnghe: element.nganhnghe,
+                            anhtuyendung: element.anhtuyendung,
+                            saves: element.saves,
+                            recruitments: element.recruitments,
+                            xemdaluuchua: user.save.includes(element._id) ? "co" : "chua"
+                            
+                        }
+                        bbb = bbb.concat(b)
+                    })
+                    );
+                res.json(bbb);
             }
             else{
                 const exp = await Post.find({   
@@ -147,6 +174,7 @@ const postController = {
             }     
         } catch (error) {
          res.json(error);
+         console.log(error)
         } 
     },
     //find theo luong
@@ -197,7 +225,7 @@ const postController = {
             }
         }
     },
-    //pull post
+    //pull post  xoa post
     pull_post: async(req,res) => {
         const {id} = req?.params;
         if(req.user._id !== id){
