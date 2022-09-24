@@ -35,6 +35,7 @@ router.post('/upload_profile',isAuth, uploads.single('profile'),userController.u
 
 router.put('/fetch_one/:id', isAuth, userController.fetch_one);
 router.get('/fetch_save', isAuth, userController.fetch_save);
+router.get('/fetch_recruitments', isAuth, userController.fetch_recruitments);
 
 //follow
 router.put('/follow/:id',isAuth,userController.follow);

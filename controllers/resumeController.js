@@ -23,11 +23,11 @@ const nodeHtmlToImage = require('node-html-to-image');
 const nodemailer = require("nodemailer");
 //const { userInfo } = require('os');
 const options = {
-    // "height": "10.5in",        // allowed units: mm, cm, in, px
-    // "width": "4in",   
+     //"height": "20.5in",        // allowed units: mm, cm, in, px
+     //"width": "10in",   
     "width": "4.88in",
-    "height": "6.288in"
-    // allowed units: mm, cm, in, pxI
+    "height": "6.288in",
+     //allowed units: mm, cm, in, pxI
 };
 const resumeController = {
     addResume1: async(req,res)=>{
@@ -299,34 +299,49 @@ const resumeController = {
 }
 
 async function CreatePDF (id, mya){
-    console.log("dang chay")
+    let resumeT;
     let anh = await Resume.findById(id);
+    let mau = anh.mau
+    let ngonngucuamau = anh.ngonngucuamau
     const userName = anh.nganhnghe;
     const lowercaseName = userName.toLowerCase();
     const noSpaceName = lowercaseName.replace(' ', '');
     const shortName = noSpaceName.slice(0, 10);
     const filename2 = "./pdf/" + shortName +""+Date.now()+"-resume.pdf";      
     try {
-        let bangmau =[]; 
-        let trunggian = anh.mau
-        switch(trunggian){
-            case "1_red":
-                bangmau = ["rgb(252, 76, 0)","rgb(255, 196, 0)","rgb(119, 26, 0)","rgb(119, 26, 0)"]
-                break
-            case "1_blue":
-                bangmau = ["rgb(183, 182, 255)","rgb(91, 88, 255)","rgb(12, 36, 58)","rgb(1, 0, 66)"]
-                break
-            case "1_green":
-                bangmau = ["rgb(139, 247, 205)","rgb(183, 217, 255)","rgb(0, 119, 89)","rgb(0, 119, 89)"]
-                break
-            case "1_yellow":
-                bangmau = ["rgb(200, 255, 2)","rgb(247, 251, 5)","rgb(255, 162, 2)","rgb(255, 162, 2)"]
-                break  
+        switch(mau){
+            case "resume1":
+                if(ngonngucuamau == "en"){
+                    resumeT = resume1_en
+                }else{
+                    resumeT = resume1_vn
+                }
+                break;
+            case "resume2":
+                if(ngonngucuamau == "en"){
+                    resumeT = resume2_en
+                }else{
+                    resumeT = resume2_vn
+                }
+                break;
+            case "resume3":
+                if(ngonngucuamau == "en"){
+                    resumeT = resume3_en
+                }else{
+                    resumeT = resume3_vn
+                }
+                break;
+            case "resume4":
+                if(ngonngucuamau == "en"){
+                    resumeT = resume4_en
+                }else{
+                    resumeT = resume4_vn
+                }
+            break;
             default:
-                bangmau = ["rgb(252, 76, 0)","rgb(255, 196, 0)","rgb(119, 26, 0)","rgb(119, 26, 0)"]
-                break 
+                break;
         }
-        pdf.create(blueResume(anh = anh, userInfo = null, userImage = null, bangmau = bangmau), options).toFile(filename2, (error, response) => {
+        pdf.create( resumeT(anh, userInfo = null, userImage = null), options).toFile(filename2, (error, response) => {
             if (error){
                 console.log(error)
                 console.log("ok")
@@ -362,9 +377,11 @@ function Xulyanhresume(anh,userInfo,userImage){
         case "resume3":
             if(ngonngucuamau == "en"){
                 resumeT = resume3_en
+                console.log("resume3");
             }else{
                 resumeT = resume3_vn
             }
+            break;
         case "resume4":
             if(ngonngucuamau == "en"){
                 resumeT = resume4_en

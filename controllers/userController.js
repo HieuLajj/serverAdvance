@@ -248,9 +248,19 @@ const userController = {
         try {
             const exp = await User.findById(req.user._id).populate('save');
             res.json(exp.save);
-           } catch (error) {
+        } catch (error) {
             res.json(error);
         }  
+    },
+
+    // truy van nhung ban gui ho so truoc do
+    fetch_recruitments: async(req,res) => {
+        try{
+            const exp = await User.findById(req.user._id).populate('recruitments');
+            res.json(exp.recruitments);
+        }catch(error){
+            res.json(error);
+        }
     },
     //follow a user
     follow : async(req,res) => {
