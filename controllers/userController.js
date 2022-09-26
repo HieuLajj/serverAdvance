@@ -16,7 +16,7 @@ const userController = {
                 email,
                 name,   
             });
-            res.json({success: true,user});
+            res.json({success: true, data: user});
         } catch (error) {
             console.log(error);
             res.json(error)
@@ -52,7 +52,7 @@ const userController = {
         try {
             const user = await User.findOne({uuid});
             const token =  jwt.sign({userId: user._id}, process.env.JWT_SECRET, {expiresIn:'1y'});
-            res.json({success: true,user, token})
+            res.json({success: true,data: user, token})
         } catch (error) {
             res.json({success: false})
         }
@@ -178,7 +178,7 @@ const userController = {
                 },
                 { new: true, runValidators: true }
             )
-            res.json({success: true, exp});
+            res.json({success: true, data: exp});
         } catch (error) {
             res.json(error)
         }
@@ -237,7 +237,7 @@ const userController = {
         const {id} = req?.params;
         try {
          const exp = await User.findById(id).populate('save');
-         res.json(exp);
+            res.json({success: true, data: exp});
         } catch (error) {
          res.json(error);
         } 
