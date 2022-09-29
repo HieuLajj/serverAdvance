@@ -111,7 +111,7 @@ const recruitController = {
     fetch_all: async (req,res) => {
         try {
           const exp = await Recruit.find();
-          res.json(exp);
+            res.json({success: true, data: exp});
         } catch (error) {
           res.json(error);
         }
@@ -120,7 +120,7 @@ const recruitController = {
         const {id} = req?.params;
         try {
             const exp = await Recruit.findById(id);
-            res.json(exp);
+            res.json({success: true, data: exp});
           } catch (error) {
             res.json(error);
         }
