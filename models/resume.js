@@ -38,10 +38,10 @@ const resumeSchema = new mongoose.Schema({
         type: Array,
     },
     kinhnghiem:{
-        type: Object,
+        type: Array,
     },
     hocvan:{
-        type: Object,
+        type: Array,
     },
     sohokhau:{
         type: String,

@@ -31,18 +31,21 @@ const options = {
 };
 const resumeController = {
     addResume1: async(req,res)=>{
+        console.log("Fawfawefawe")
         const {user} = req;
         if(!user) return res
             .status(401)
             .json({success:false, message: 'unauthorized acesss'
                 })
         try {
+            console.log("bbbb")
             const image = await cloudinary.uploader.upload(req.file.path,{
                 public_id: `${user._id}_profile`,
                 width: 500,
                 height:500,
                 crop: 'fill'
             });
+            console.log("cccc")
             const result = await Resume.create({
                 user: req.user._id,
                 anhdaidien: image.url,
@@ -301,9 +304,9 @@ const resumeController = {
 async function CreatePDF (id, mya){
     let resumeT;
     let anh = await Resume.findById(id);
-    let mau = anh.mau
+    let mau = anh?.mau
     let ngonngucuamau = anh.ngonngucuamau
-    const userName = anh.nganhnghe;
+    const userName = anh?.nganhnghe ? anh?.nganhnghe : "okokokok";
     const lowercaseName = userName.toLowerCase();
     const noSpaceName = lowercaseName.replace(' ', '');
     const shortName = noSpaceName.slice(0, 10);
@@ -339,6 +342,7 @@ async function CreatePDF (id, mya){
                 }
             break;
             default:
+                resumeT = resume1_en;
                 break;
         }
         pdf.create( resumeT(anh, userInfo = null, userImage = null), options).toFile(filename2, (error, response) => {
