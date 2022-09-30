@@ -190,7 +190,7 @@ const resumeController = {
     fetch_all: async (req,res) => {
         const id = req.user._id;
         try {
-          const exp = await Resume.findById(id);
+          const exp = await Resume.find({user: id});
           res.json({success: true, data: exp});
         } catch (error) {
           res.json(error);
@@ -395,6 +395,7 @@ function Xulyanhresume(anh,userInfo,userImage){
             }
         break;
         default:
+            resumeT = resume1_en;
             break;
     }
     // let bangmau =[]; 
