@@ -23,35 +23,37 @@ function duyenmangthanhbang(g){
     return b;
 }
 function duyenmanghocvan(g){
-    let b=""
-    for (key in g){
-        b+= `
-            <div class="cvo-info fz-13 row">
-                <div class="cvo-info-school-wraper">
-                    <span class="cvo-info-school">${g[key]}</span>
-                </div>
-                <div class="cvo-info-time">
-                    <span class="cvo-info-start">${key}</span>
-                </div>
-            </div>
-            `
-    }
-    return b;
+  let b=""
+  //for (key in g){
+  g.forEach(function(g){
+      let split = g.split(":");
+      b+= ` 
+          <div class="cvo-info fz-13 row">
+              <div class="cvo-info-school-wraper">
+                  <span class="cvo-info-school">${split[0]}</span>
+              </div>
+              <div class="cvo-info-time">
+                  <span class="cvo-info-start">${split[1]}</span>
+              </div>
+          </div>
+          `
+      });
+  return b;
 }
 function duyenmangkinhnghiem(g){
-    let b=""
-    for (key in g){
-        b+= `
-        <li>
-                 <div class="date">${key}</div> 
-                 <div class="info">
-                      <p class="semi-bold">${g[key]}</p> 
-        
-                 </div>
-             </li>
+  let b=""
+  //for (key in g){
+  g.forEach(function(g){
+      let split = g.split(":");
+      b+= `<li>
+              <div class="date">${split[0]}</div> 
+                  <div class="info">
+                    <p class="semi-bold">${split[1]}</p> 
+                  </div>
+            </li>
             `
-    }
-    return b;
+  });
+  return b;
 }
 const resume4_vn = (anh, userInfo, userImage) => {
     return`

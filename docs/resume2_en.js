@@ -24,34 +24,38 @@ function duyenmangthanhbang(g){
 }
 function duyenmanghocvan(g){
     let b=""
-    for (key in g){
+    //for (key in g){
+    g.forEach(function(g){
+        let split = g.split(":");
         b+= `
             <div class="cvo-info fz-13 row">
                 <div class="cvo-info-school-wraper">
-                    <span class="cvo-info-school">${g[key]}</span>
+                    <span class="cvo-info-school">${split[1]}</span>
                 </div>
                 <div class="cvo-info-time">
-                    <span class="cvo-info-start">${key}</span>
+                    <span class="cvo-info-start">${split[0]}</span>
                 </div>
             </div>
             `
-    }
+        });
     return b;
 }
 function duyenmangkinhnghiem(g){
     let b=""
-    for (key in g){
+    //for (key in g){
+    g.forEach(function(g){
+        let split = g.split(":");
         b+= `
         <div class="cvo-info row">
             <div class="cvo-info-school-wraper fz-13">
-                <strong>${g[key]}</strong>
+                <strong>${split[1]}</strong>
             </div>
             <div class="cvo-info-time fz-13">
-                <span class="cvo-info-start">${key}</span>
+                <span class="cvo-info-start">${split[0]}</span>
             </div>
         </div>
             `
-    }
+    });
     return b;
 }
 const resume2_en = (anh, userInfo, userImage) => {

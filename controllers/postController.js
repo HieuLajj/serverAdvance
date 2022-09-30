@@ -27,7 +27,9 @@ const postController = {
                 khuvuc : desc.khuvuc,
                 diachilamviec : desc.diachilamviec,
                 nganhnghe : desc.nganhnghe,
-                anhtuyendung: desc.anhtuyendung,
+                //anhtuyendung: desc.anhtuyendung,
+                motacongviec: desc.motacongviec,
+                yeucauungvien: desc.yeucauungvien,
             })
             res.json({success: true, result})
         } catch (error) {
@@ -67,7 +69,7 @@ const postController = {
     //tim kiem theo ten nha tuyen dung hoac nganh nghe
     //khu vuc lam viec dia chi lam viec
     find_employer_career: async(req,res) => {
-        const {follow} = req.body
+        const {follow} = req?.body ? req.body : "false"
         const keyword = req.query.search
         ? {
           $or: [
@@ -117,10 +119,12 @@ const postController = {
     },
     //find theo tuoi di
     find_age: async(req,res) => {
-        const {age,follow} = req.body
+        const {age} = req.body
+        const {follow} = req?.body ? req.body : "false"
         const user = await User.findById(req.user._id);
         try {
             if(follow == "true"){
+                console.log("dang chay vao");
                 let aaa=[];
                 const currentUser = await User.findById(req.user._id);            
                 await Promise.all(
@@ -179,8 +183,8 @@ const postController = {
     },
     //find theo luong
     find_wage: async(req,res) => {
-        const {wage, follow
-            } = req.body
+        const {wage} = req.body
+        const {follow} = req?.body ? req.body : "false"
         try {
             if(follow == "true"){
                 let aaa=[];

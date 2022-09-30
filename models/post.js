@@ -45,7 +45,13 @@ const postSchema = new mongoose.Schema({
     },
     anhtuyendung:{
         type: String,
-    }, 
+    },
+    motacongviec:{
+        type: String,
+    },
+    yeucauungvien:{
+        type: String,
+    },
     saves : [{type: mongoose.Schema.Types.ObjectId, ref: "User"}],    
     recruitments : [{type: mongoose.Schema.Types.ObjectId, ref: "Resume"}],
     created: {

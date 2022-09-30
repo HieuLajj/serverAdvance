@@ -9,7 +9,7 @@ const recruitController = {
         const {luongcoban, soluongtuyen, gioitinh,
         dotuoi, trinhdongoaingu, kinhnghiem, yeucaukhac,
         thongtinlienhe, nhatuyendung, khuvuc, diachilamviec,
-        mau,phanloai,nganhnghe, motacongviec, yeucauungvien
+        nganhnghe, motacongviec, yeucauungvien
         } = req.body;
 
         const {user} = req;
@@ -33,13 +33,13 @@ const recruitController = {
                 nhatuyendung,
                 khuvuc,
                 diachilamviec,
-                phanloai,
+                //phanloai,
                 motacongviec,
                 yeucauungvien,
-                anhtuyendung: Xulyrecruit(
-                    recruitUpdate = req.body
-                ),
-                mau
+                // anhtuyendung: Xulyrecruit(
+                //     recruitUpdate = req.body
+                // ),
+                // mau
             });
             res.json({success: true, result})
         } catch (error) {
@@ -51,19 +51,19 @@ const recruitController = {
         }
     },
     update_recruit: async(req,res)=>{
-        let recruitUpdate;
+        //let recruitUpdate;
         const {id} = req?.params;
         const {user} = req;
-        let recruitInfo = await Recruit.findById(id);
-        if(recruitInfo.anhtuyendung!=null){
-            fs.unlink(`.${recruitInfo.anhtuyendung.slice(20)}`, (err) => {
-                if (err) {
-                console.error(err)
-                return
-            }else{         
-            }
-            }) 
-        }
+        // let recruitInfo = await Recruit.findById(id);
+        // if(recruitInfo.anhtuyendung!=null){
+        //     fs.unlink(`.${recruitInfo.anhtuyendung.slice(20)}`, (err) => {
+        //         if (err) {
+        //         console.error(err)
+        //         return
+        //     }else{         
+        //     }
+        //     }) 
+        // }
         if(!user) return res
             .status(401)
             .json({success:false, message: 'unauthorized acesss'
@@ -72,7 +72,8 @@ const recruitController = {
             const {luongcoban, soluongtuyen, gioitinh,
                 dotuoi, trinhdongoaingu, kinhnghiem, yeucaukhac,
                 thongtinlienhe, nhatuyendung, khuvuc, diachilamviec,
-                mau,phanloai,nganhnghe,motacongviec,yeucauungvien,
+                nganhnghe,motacongviec,yeucauungvien,
+                //mau,phanloai,
                 } = req.body;
             const result = await Recruit.findByIdAndUpdate(
                 id,
@@ -89,11 +90,11 @@ const recruitController = {
                     nhatuyendung, 
                     khuvuc, 
                     diachilamviec,
-                    mau,
-                    phanloai,    
+                    // mau,
+                    // phanloai,    
                     motacongviec,
                     yeucauungvien,
-                    anhtuyendung: Xulyrecruit(recruitUpdate = req.body, recruitInfo),                   
+                    //anhtuyendung: Xulyrecruit(recruitUpdate = req.body, recruitInfo),                   
                 },
                 { new: true, runValidators: true }
             )

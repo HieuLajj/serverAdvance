@@ -43,21 +43,21 @@ const recruitSchema = new mongoose.Schema({
     nganhnghe:{
         type: String
     },
-    anhtuyendung:{
-        type: String,
-    },
-    mau:{
-        type: String,
-    },
     motacongviec:{
         type: String,
     },
     yeucauungvien:{
         type: String,
     },
-    phanloai:{
-        type: String,
-        default: "default"
-    }
+    // anhtuyendung:{
+    //     type: String,
+    // },
+    // mau:{
+    //     type: String,
+    // },
+    // phanloai:{
+    //     type: String,
+    //     default: "default"
+    // }
 });
 module.exports = mongoose.model('Recruit',recruitSchema)

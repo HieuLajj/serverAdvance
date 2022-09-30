@@ -30,10 +30,10 @@ function duyenmanghocvan(g){
         b+= `
             <div class="cvo-info fz-13 row">
                 <div class="cvo-info-school-wraper">
-                    <span class="cvo-info-school">${split[0]}</span>
+                    <span class="cvo-info-school">${split[1]}</span>
                 </div>
                 <div class="cvo-info-time">
-                    <span class="cvo-info-start">${split[1]}</span>
+                    <span class="cvo-info-start">${split[0]}</span>
                 </div>
             </div>
             `
@@ -48,10 +48,10 @@ function duyenmangkinhnghiem(g){
         b+= `
         <div class="cvo-info row">
             <div class="cvo-info-school-wraper fz-13">
-                <strong>${split[0]}</strong>
+                <strong>${split[1]}</strong>
             </div>
             <div class="cvo-info-time fz-13">
-                <span class="cvo-info-start">${split[1]}</span>
+                <span class="cvo-info-start">${split[0]}</span>
             </div>
         </div>
             `

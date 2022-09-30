@@ -50,7 +50,7 @@ const resumeController = {
                 user: req.user._id,
                 anhdaidien: image.url,
             });
-            res.json({success: true,data:result.id})
+            res.json({success: true,id:result.id})
         } catch (error) {
             console.log(error)
             res.status(500).json({
@@ -122,7 +122,7 @@ const resumeController = {
                 },
                 { new: true, runValidators: true }
             )
-            res.json({success: true,data:result})
+            res.json({success: true,user:result})
         } catch (error) {
             console.log(error)
             res.status(500).json({
@@ -188,9 +188,10 @@ const resumeController = {
     },
     // fetch all resume
     fetch_all: async (req,res) => {
+        const id = req.user._id;
         try {
-          const exp = await Resume.find();
-            res.json({success: true, data: exp});
+          const exp = await Resume.findById(id);
+          res.json({success: true, data: exp});
         } catch (error) {
           res.json(error);
         }
@@ -223,7 +224,7 @@ const resumeController = {
               phanloaibieumau: id
             }},                  
           ])     
-            res.json({success: true, data: exp});
+          res.json({success: true, data: exp});
         } catch (error) {
           res.json(error);
         }
