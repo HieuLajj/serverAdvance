@@ -51,8 +51,9 @@ const postController = {
     },
     fetch_all: async(req,res) => {
         try {
+            const user = await User.findById(req.user._id);
             const exp = await Post.find().populate('user');
-            res.json(exp);
+            xemdaluuchua(exp, user, res);
         } catch (error) {
             res.json(error);
         } 
@@ -69,6 +70,7 @@ const postController = {
     //tim kiem theo ten nha tuyen dung hoac nganh nghe
     //khu vuc lam viec dia chi lam viec
     find_employer_career: async(req,res) => {
+        const user = await User.findById(req.user._id);
         const {follow} = req?.body ? req.body : "false"
         const keyword = req.query.search
         ? {
@@ -107,11 +109,11 @@ const postController = {
                     }); 
                 }
                 ))
-                res.json(aaa);
+                xemdaluuchua(aaa, user, res);
             }
             else{
                 const exp = await Post.find(keyword).populate('user')
-                res.json(exp);  
+                xemdaluuchua(exp, user, res);  
             }      
         } catch (error) {
          res.json(error);
@@ -124,7 +126,6 @@ const postController = {
         const user = await User.findById(req.user._id);
         try {
             if(follow == "true"){
-                console.log("dang chay vao");
                 let aaa=[];
                 const currentUser = await User.findById(req.user._id);            
                 await Promise.all(
@@ -139,34 +140,7 @@ const postController = {
                     }); 
                 }
                 ))
-                let bbb = []
-                await Promise.all(
-                    aaa.map(async(element)=>{
-                        let b = {
-                            _id : element._id,
-                            user : element.user,
-                            luongcoban : element.luoncoban,
-                            soluongtuyen: element.soluongtuyen,
-                            gioitinh: element.gioitinh,
-                            dotuoi: element.dotuoi,
-                            trinhdongoaingu: element.trinhdongoaingu,
-                            kinhnghiem: element.kinhnghiem,
-                            yeucaukhac: element.yeucaukhac,
-                            thongtinlienhe: element.thongtinlienhe,
-                            nhatuyendung: element.nhatuyendung,
-                            khuvuc: element.khuvuc,
-                            diachilamviec: element.diachilamviec,
-                            nganhnghe: element.nganhnghe,
-                            anhtuyendung: element.anhtuyendung,
-                            saves: element.saves,
-                            recruitments: element.recruitments,
-                            xemdaluuchua: user.save.includes(element._id) ? "co" : "chua"
-                            
-                        }
-                        bbb = bbb.concat(b)
-                    })
-                    );
-                res.json(bbb);
+                xemdaluuchua(aaa,user,res);   
             }
             else{
                 const exp = await Post.find({   
@@ -174,7 +148,7 @@ const postController = {
                         { "dotuoi" :{$lte: Number(age)} },
                         { "dotuoi" :{$gte: Number(age)} },  
                     ]}).populate('user')
-                res.json(exp);   
+                xemdaluuchua(exp,user,res);   
             }     
         } catch (error) {
          res.json(error);
@@ -183,6 +157,7 @@ const postController = {
     },
     //find theo luong
     find_wage: async(req,res) => {
+        const user = await User.findById(req.user._id);
         const {wage} = req.body
         const {follow} = req?.body ? req.body : "false"
         try {
@@ -200,10 +175,10 @@ const postController = {
                     }); 
                 }
                 ))
-                res.json(aaa);
+                xemdaluuchua(aaa, user, res);
             }else{
                 const exp = await Post.find({"luongcoban" :{$gte: Number(wage)}}).populate('user')
-                res.json(exp);
+                xemdaluuchua(exp, user, res);
             }
         } catch (error) {
             res.json(error)
@@ -314,5 +289,37 @@ const postController = {
             res.json(error);
         }
     }
+}
+async function xemdaluuchua (exp, user, res){
+    let bbb = []
+         await Promise.all(
+            exp.map(async(element)=>{
+                let b = {
+                    _id : element._id,
+                    user : element.user,
+                    luongcoban : element.luoncoban,
+                    soluongtuyen: element.soluongtuyen,
+                    gioitinh: element.gioitinh,
+                    dotuoi: element.dotuoi,
+                    trinhdongoaingu: element.trinhdongoaingu,
+                    kinhnghiem: element.kinhnghiem,
+                    yeucaukhac: element.yeucaukhac,
+                    thongtinlienhe: element.thongtinlienhe,
+                    nhatuyendung: element.nhatuyendung,
+                    khuvuc: element.khuvuc,
+                    diachilamviec: element.diachilamviec,
+                    nganhnghe: element.nganhnghe,
+                    anhtuyendung: element.anhtuyendung,
+                    saves: element.saves,
+                    recruitments: element.recruitments,
+                    motacongviec: element.motacongviec,
+                    yeucauungvien: element.yeucauungvien,
+                    created: element.created,
+                    xemdaluuchua: user.save.includes(element._id) ? "co" : "chua"   
+                }
+                bbb = bbb.concat(b)
+            })
+        );
+        res.json(bbb);
 }
 module.exports = postController;
