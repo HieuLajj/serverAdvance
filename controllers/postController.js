@@ -242,17 +242,43 @@ const postController = {
     },
     //delete recruitments =>xoa id cua resume (cua user) khoi recruitments cua bai post
     delete_recruitments: async(req,res) => {
-        const {resumeId, postId} = req.body
+        const {postId} = req?.params;
+        // const {postId} = req.body
         const user = await User.findById(req.user._id);
-        try {
-            const post = await Post.findById(postId);
-            if(post?.recruitments.includes(resumeId)){
-                await post.updateOne({$pull:{recruitments: resumeId}});
-                await user.updateOne({$pull:{recruitments: postId}});
-                res.json({ success: true, log: "thu hoi ho so thanh cong"})
-            }else{
-                res.json({ success: false, log: "ban chua gui ho so nay"});
-            }
+        // const hh = Post.findById(postId).populate('recruitments')
+        //     .exec(    
+        //         (err, items)=>{
+        //             let a = items.recruitments;
+        //             a = a.filter(function(item){
+        //                 return item.user == req.user._id.toString();
+        //             })
+        //             console.log(a[0]._id);
+                  
+        //     }      
+        //     );
+        try { 
+            const hh = Post.findById(postId).populate('recruitments')
+            .exec(    
+                (err, items)=>{
+                    let a = items.recruitments;
+                    a = a.filter(function(item){
+                        return item.user == req.user._id.toString();
+                    })
+                    if(a[0]?._id){
+                        locid (postId, a[0]._id, res, user)
+                    }else{
+                        res.json({ success: false, log: "ban chua gui ho so nay"});
+                    }
+                }      
+            );
+            // const post = await Post.findById(postId);
+            // if(post?.recruitments.includes(resumeId)){
+            //     await post.updateOne({$pull:{recruitments: resumeId}});
+            //     await user.updateOne({$pull:{recruitments: postId}});
+            //     res.json({ success: true, log: "thu hoi ho so thanh cong"})
+            // }else{
+            //    res.json({ success: false, log: "ban chua gui ho so nay"});
+           // }
         } catch (error) {
             console.log(error)
             res.status(403).json("co loi xay ra");
@@ -283,8 +309,8 @@ const postController = {
                 .exec(
                 
                 (err, items)=>{
-                    let a = items.recruitments;
-                    a = a.filter(function(item){
+                    let a = items?.recruitments;
+                    a = a?.filter(function(item){
                        // return item.user == "6317f42dd147faa99ca44be2"
                         return item.user == req.user._id.toString();
                     })
@@ -329,5 +355,16 @@ async function xemdaluuchua (exp, user, res){
             })
         );
         res.json(bbb);
+}
+
+async function locid (postId, resumeId, res, user){
+    const post = await Post.findById(postId);
+        if(post?.recruitments.includes(resumeId)){
+            await post.updateOne({$pull:{recruitments: resumeId}});
+            await user.updateOne({$pull:{recruitments: postId}});
+            res.json({ success: true, log: "thu hoi ho so thanh cong"})
+        }else{
+            res.json({ success: false, log: "ban chua gui ho so nay"});
+        }
 }
 module.exports = postController;
