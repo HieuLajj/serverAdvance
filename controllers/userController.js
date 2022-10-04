@@ -245,9 +245,11 @@ const userController = {
     
     // truy van nhung ban luu tu truoc do
     fetch_save : async(req,res) => {
+        const user = await User.findById(req.user._id);
         try {
             const exp = await User.findById(req.user._id).populate('save');
-            res.json(exp.save);
+            xemdaluuchua(exp.save, user, res);
+            //res.json(exp.save);
         } catch (error) {
             res.json(error);
         }  
@@ -305,5 +307,38 @@ const userController = {
             
         }
     }
+}
+async function xemdaluuchua (exp, user, res){
+    let bbb = []
+         await Promise.all(
+            exp.map(async(element)=>{
+                let b = {
+                    _id : element._id,
+                    user : element.user,
+                    luongcoban : element.luoncoban,
+                    soluongtuyen: element.soluongtuyen,
+                    gioitinh: element.gioitinh,
+                    dotuoi: element.dotuoi,
+                    trinhdongoaingu: element.trinhdongoaingu,
+                    kinhnghiem: element.kinhnghiem,
+                    yeucaukhac: element.yeucaukhac,
+                    thongtinlienhe: element.thongtinlienhe,
+                    nhatuyendung: element.nhatuyendung,
+                    khuvuc: element.khuvuc,
+                    diachilamviec: element.diachilamviec,
+                    nganhnghe: element.nganhnghe,
+                    anhtuyendung: element.anhtuyendung,
+                    saves: element.saves,
+                    recruitments: element.recruitments,
+                    motacongviec: element.motacongviec,
+                    yeucauungvien: element.yeucauungvien,
+                    created: element.created,
+                    xemdaluuchua: user.save.includes(element._id) ? "co" : "chua",
+                    xemdaguichua: user.recruitments.includes(element._id)? "co" : "chua"
+                }
+                bbb = bbb.concat(b)
+            })
+        );
+        res.json(bbb);
 }
 module.exports = userController;

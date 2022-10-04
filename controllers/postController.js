@@ -228,7 +228,7 @@ const postController = {
         try {
             const post = await Post.findById(postId);
             const user = await User.findById(req.user._id);
-            if(!post?.recruitments.includes(resumeId)){
+            if(!post?.recruitments.includes(resumeId) && !user?.recruitments.includes(postId)){
                 await post.updateOne({$push:{recruitments: resumeId}});
                 await user.updateOne({$push:{recruitments: postId}});
                 res.json({ success: true, log: "gui ho so thanh cong"})
@@ -243,10 +243,12 @@ const postController = {
     //delete recruitments =>xoa id cua resume (cua user) khoi recruitments cua bai post
     delete_recruitments: async(req,res) => {
         const {resumeId, postId} = req.body
+        const user = await User.findById(req.user._id);
         try {
             const post = await Post.findById(postId);
             if(post?.recruitments.includes(resumeId)){
                 await post.updateOne({$pull:{recruitments: resumeId}});
+                await user.updateOne({$pull:{recruitments: postId}});
                 res.json({ success: true, log: "thu hoi ho so thanh cong"})
             }else{
                 res.json({ success: false, log: "ban chua gui ho so nay"});
@@ -260,6 +262,7 @@ const postController = {
     //tim tat ca nhung bai resume duoc gui vao bai post nay
     fetch_recruitments : async (req,res) => {
         const {id} = req?.params;
+        console.log(id)
         try {
             const exp = await Post.findById(id).populate('recruitments');
             res.json(exp.recruitments);
@@ -271,10 +274,13 @@ const postController = {
     //fetch_recruitment_one
     //tim tat ca nhung bai resume cua nguoi dung (1 nguoi, nguoi dang su dung) gui vao bai post nay
     fetch_recruitments_user : async (req,res) =>{
-        //console.log(req.user._id.toString())
         const {id} = req?.params;
+        console.log(id);
         try {
-            const exp = await Post.findById(id).populate('recruitments').exec(
+            //const exp = await Post.findById(id)
+            const exp = await Post.findById(id)
+            .populate('recruitments')
+                .exec(
                 
                 (err, items)=>{
                     let a = items.recruitments;
@@ -284,9 +290,10 @@ const postController = {
                     })
                     res.json(a);
                 }
-                );        
+                );      
+            //res.json(exp);  
         } catch (error) {
-            res.json(error);
+            console.log(error)
         }
     }
 }
@@ -315,7 +322,8 @@ async function xemdaluuchua (exp, user, res){
                     motacongviec: element.motacongviec,
                     yeucauungvien: element.yeucauungvien,
                     created: element.created,
-                    xemdaluuchua: user.save.includes(element._id) ? "co" : "chua"   
+                    xemdaluuchua: user.save.includes(element._id) ? "co" : "chua",
+                    xemdaguichua: user.recruitments.includes(element._id)? "co" : "chua"
                 }
                 bbb = bbb.concat(b)
             })
