@@ -1,6 +1,7 @@
 const Post = require("../models/post")
 const Recruit = require("../models/recruit")
 const User = require("../models/user")
+const Resume = require("../models/resume")
 const mongoose = require("mongoose")
 const postController = {
 
@@ -56,6 +57,25 @@ const postController = {
             xemdaluuchua(exp, user, res);
         } catch (error) {
             res.json(error);
+        } 
+    },
+    findbyResume: async(req,res) => {
+        const {id} = req?.params;
+        try {
+            const user = await User.findById(req.user._id);
+            const exp = await Resume.findById(id);
+            const exp2 = await Post.find(
+                {
+                    $and:[
+                        { nganhnghe: { $regex: exp?.nganhnghe, $options: "i" } },
+                        { khuvuc: { $regex: exp?.diachihientai, $options: "i" } },
+                        { luongcoban :{$gte: Number(exp?.mucluong)}}
+                    ]
+                }
+            ).populate('user')
+            xemdaluuchua(exp2, user, res);
+        } catch (error) {
+            console.log(error)
         } 
     },
     // tim tat ca cac bai post cua 1 user (cua nha tuyen dung dang len)
@@ -330,7 +350,7 @@ async function xemdaluuchua (exp, user, res){
                 let b = {
                     _id : element._id,
                     user : element.user,
-                    luongcoban : element.luoncoban,
+                    luongcoban : element.luongcoban,
                     soluongtuyen: element.soluongtuyen,
                     gioitinh: element.gioitinh,
                     dotuoi: element.dotuoi,
