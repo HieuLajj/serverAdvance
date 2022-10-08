@@ -259,7 +259,7 @@ const userController = {
     fetch_recruitments: async(req,res) => {
         try{
             const exp = await User.findById(req.user._id).populate('recruitments');
-            res.json(exp.recruitments);
+            res.json({success: true, data: exp.recruitments});
         }catch(error){
             res.json(error);
         }
@@ -339,6 +339,6 @@ async function xemdaluuchua (exp, user, res){
                 bbb = bbb.concat(b)
             })
         );
-        res.json(bbb);
+    res.json({success: true, data: bbb});
 }
 module.exports = userController;

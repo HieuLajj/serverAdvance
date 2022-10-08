@@ -31,7 +31,7 @@ const postController = {
                 motacongviec: desc.motacongviec,
                 yeucauungvien: desc.yeucauungvien,
             })
-            res.json({success: true, result})
+            res.json({success: true, data: result})
         } catch (error) {
             console.log(error)
             res.status(500).json({
@@ -62,7 +62,7 @@ const postController = {
     fetch_all_1user : async (req,res)=>{
         try {
             const exp = await Post.find({"user" : req.user._id}).populate('user');
-            res.json(exp);
+            res.json({success: true, data: exp});
         } catch (error){
             res.json(error);
         }
@@ -193,10 +193,10 @@ const postController = {
                 if(!user?.save.includes(id)){
                     console.log("chua co");
                     await user.updateOne({$push:{save: id}});
-                    res.json({ success: true, log: "thanh cong"})
+                    res.json({ success: true, message: "thanh cong"})
                 }else{
                     console.log("co roi");
-                    res.json({ success: false, log: "da luu tu truoc do"});
+                    res.json({ success: false, message: "da luu tu truoc do"});
                 }
             } catch (error) {
                 console.log(error)
@@ -212,9 +212,9 @@ const postController = {
                 const user = await User.findById(req.user._id);
                 if(user?.save.includes(id)){
                     await user.updateOne({$pull:{save: id}});
-                    res.json({ success: true, log: "xoa thanh cong"})
+                    res.json({ success: true, message: "xoa thanh cong"})
                 }else{
-                    res.json({ success: false, log: "ban chua luu post nay"});
+                    res.json({ success: false, message: "ban chua luu post nay"});
                 }
             } catch (error) {
                 console.log(error)
@@ -231,9 +231,9 @@ const postController = {
             if(!post?.recruitments.includes(resumeId) && !user?.recruitments.includes(postId)){
                 await post.updateOne({$push:{recruitments: resumeId}});
                 await user.updateOne({$push:{recruitments: postId}});
-                res.json({ success: true, log: "gui ho so thanh cong"})
+                res.json({ success: true, message: "gui ho so thanh cong"})
             }else{
-                res.json({ success: false, log: "da gui ho so truoc do"});
+                res.json({ success: false, message: "da gui ho so truoc do"});
             }
         } catch (error) {
             console.log(error)
@@ -267,7 +267,7 @@ const postController = {
                     if(a[0]?._id){
                         locid (postId, a[0]._id, res, user)
                     }else{
-                        res.json({ success: false, log: "ban chua gui ho so nay"});
+                        res.json({ success: false, message: "ban chua gui ho so nay"});
                     }
                 }      
             );
@@ -314,7 +314,7 @@ const postController = {
                        // return item.user == "6317f42dd147faa99ca44be2"
                         return item.user == req.user._id.toString();
                     })
-                    res.json(a);
+                    res.json({success: true, data: a});
                 }
                 );      
             //res.json(exp);  
@@ -354,7 +354,7 @@ async function xemdaluuchua (exp, user, res){
                 bbb = bbb.concat(b)
             })
         );
-        res.json(bbb);
+    res.json({success: true, data: bbb});
 }
 
 async function locid (postId, resumeId, res, user){
@@ -362,9 +362,9 @@ async function locid (postId, resumeId, res, user){
         if(post?.recruitments.includes(resumeId)){
             await post.updateOne({$pull:{recruitments: resumeId}});
             await user.updateOne({$pull:{recruitments: postId}});
-            res.json({ success: true, log: "thu hoi ho so thanh cong"})
+            res.json({ success: true, message: "thu hoi ho so thanh cong"})
         }else{
-            res.json({ success: false, log: "ban chua gui ho so nay"});
+            res.json({ success: false, message: "ban chua gui ho so nay"});
         }
 }
 module.exports = postController;
