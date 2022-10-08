@@ -50,7 +50,7 @@ const resumeController = {
                 user: req.user._id,
                 anhdaidien: image.url,
             });
-            res.json({success: true,id:result.id})
+            res.json({success: true,data:result.id})
         } catch (error) {
             console.log(error)
             res.status(500).json({
@@ -122,7 +122,7 @@ const resumeController = {
                 },
                 { new: true, runValidators: true }
             )
-            res.json({success: true,user:result})
+            res.json({success: true,data:result})
         } catch (error) {
             console.log(error)
             res.status(500).json({
