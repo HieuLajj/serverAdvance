@@ -129,6 +129,33 @@ const userController = {
         }
     },
     
+    //UPDATE anh bang cap
+    uploadAnhbangcap : async (req,res)=>{
+        const {user} = req;
+        if(!user) return res
+            .status(401)
+            .json({success:false, message: 'unauthorized acesss'
+                })
+        try {
+            const result = await cloudinary.uploader.upload(req.file.path,{
+                public_id: `${user._id}_profile`,
+                width: 500,
+                height:500,
+                crop: 'fill'
+            });
+            await User.findByIdAndUpdate(user._id,{anhbangcap: result.url})
+            res.status(201).json({
+                success: true,
+                message: 'Your Profile has updateed'
+            })
+        } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Server error,try after some time'
+        })
+            console.log('Eroor while uploading profile imge',error.message)
+        }
+    },
     //SIGN IN 2 BY TOKEN
     userSignIn2: async (req,res) =>{
         console.log("siginIn2")
@@ -164,7 +191,7 @@ const userController = {
     },
     //UPLOAD PROFILE
     uploadProfileInformation: async (req,res) => {
-        const { name, email, phone, passSendEmail, age, sex} = req.body;
+        const { name, email, phone, passSendEmail, age, sex, nganhnghe, diachihientai} = req.body;
         try {
             const exp = await User.findByIdAndUpdate(
                 req.user._id,
@@ -175,6 +202,8 @@ const userController = {
                     age,
                     sex,
                     passSendEmail,
+                    nganhnghe,
+                    diachihientai
                 },
                 { new: true, runValidators: true }
             )

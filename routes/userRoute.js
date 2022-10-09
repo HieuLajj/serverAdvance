@@ -31,7 +31,9 @@ router.post('/update',isAuth,userController.uploadProfileInformation);
 router.get('/sign_out',isAuth,userController.userSignOut);
 
 //UPLOAD PROFILE IMAGE
-router.post('/upload_profile',isAuth, uploads.single('profile'),userController.uploadProfile);
+router.post('/upload_profile', isAuth, uploads.single('profile'), userController.uploadProfile);
+// UPLOAD Anh bang cap
+router.post('/update_anhbangcap', isAuth, uploads.single('profile'), userController.uploadAnhbangcap);
 
 router.put('/fetch_one/:id', isAuth, userController.fetch_one);
 router.get('/fetch_save', isAuth, userController.fetch_save);
