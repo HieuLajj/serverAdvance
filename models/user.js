@@ -28,6 +28,15 @@ const userSchema = new mongoose.Schema({
     avatar:{
         type: String,
     },
+    anhbangcap:{
+        type: String,
+    },
+    nganhnghe:{
+        type: String,
+    },
+    diachihientai:{
+        type: String,
+    },
     age:{
         type: String,
     },

@@ -31,21 +31,18 @@ const options = {
 };
 const resumeController = {
     addResume1: async(req,res)=>{
-        console.log("Fawfawefawe")
         const {user} = req;
         if(!user) return res
             .status(401)
             .json({success:false, message: 'unauthorized acesss'
                 })
         try {
-            console.log("bbbb")
             const image = await cloudinary.uploader.upload(req.file.path,{
                 public_id: `${user._id}_profile`,
                 width: 500,
                 height:500,
                 crop: 'fill'
             });
-            console.log("cccc")
             const result = await Resume.create({
                 user: req.user._id,
                 anhdaidien: image.url,
@@ -438,6 +435,6 @@ function Xulyanhresume(anh,userInfo,userImage){
             );                   
         }
     ); 
-    return`http:/localhost:8000${pathImageChange.slice(-(pathImageChange.length-1)) }`        
+    return`http:/localhost:8000${pathImageChange.slice(-(pathImageChange.length-1))}`        
 }
 module.exports = resumeController;
