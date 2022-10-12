@@ -261,8 +261,8 @@ const resumeController = {
         let transporter = nodemailer.createTransport({
             service: "gmail",
             auth:{
-                user: `${fromEmailReal}`,
-                pass: `${passwordFromEmailReal}`
+                user: `for1withlove@gmail.com`,
+                pass: `tbwujuzzgnhbqbja`
             }
             //pass: 'tbwujuzzgnhbqbja'
         })
@@ -294,7 +294,7 @@ const resumeController = {
                     }
                 }) 
                 return res.json({
-                    message:"Da gui duoc tin nhan"
+                    success: true, message:"Da gui duoc tin nhan"
                 })
             }
             )

@@ -169,7 +169,7 @@ const postController = {
                     await Post.find({
                         $and:[
                             {"user":friendId},
-                            {"luongcoban" :{$gte: Number(wage)}}
+                            {"luongcoban" :{$lte: Number(wage)}}
                         ]}).populate('user').then((data)=>{
                         aaa = aaa.concat(data)
                     }); 
@@ -330,7 +330,7 @@ async function xemdaluuchua (exp, user, res){
                 let b = {
                     _id : element._id,
                     user : element.user,
-                    luongcoban : element.luoncoban,
+                    luongcoban : element.luongcoban,
                     soluongtuyen: element.soluongtuyen,
                     gioitinh: element.gioitinh,
                     dotuoi: element.dotuoi,
