@@ -207,8 +207,11 @@ const postController = {
 
     find_general : async(req, res) => {
         const user = await User.findById(req.user._id);
-        const {wage, age} = req.body
+        const {wage, age, sapxeptheoluong} = req.body
         const {follow} = req?.body ? req.body : "false"
+        let m = sapxeptheoluong ? {luongcoban: sapxeptheoluong} : 0;
+        let g = sapxeptheoluong ? sapxeptheoluong : 0;
+        
         try {
             if(follow == "true"){
                 let aaa=[];
@@ -232,8 +235,13 @@ const postController = {
                         ]}).populate('user').then((data)=>{
                         aaa = aaa.concat(data)
                     }); 
+                }))
+                if(g==1){
+                    aaa.sort((a, b) => (a.luongcoban > b.luongcoban) ? 1 : -1 )
                 }
-                ))
+                else if(g==-1){
+                    aaa.sort((a, b) => (a.luongcoban < b.luongcoban) ? 1 : -1 )
+                }
                 xemdaluuchua(aaa, user, res);
             }else{
             const exp = await Post.find(
@@ -253,7 +261,8 @@ const postController = {
                         { dotuoi : {$gte: Number(age ? age : 0)} }
                     ]
                 })
-            xemdaluuchua(exp, user, res);
+                .sort(m)
+                xemdaluuchua(exp, user, res);
             }
         } catch (error) {
             res.json(error) 
@@ -442,4 +451,5 @@ async function locid (postId, resumeId, res, user){
             res.json({ success: false, message: "ban chua gui ho so nay"});
         }
 }
+
 module.exports = postController;
