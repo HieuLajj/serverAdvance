@@ -204,6 +204,61 @@ const postController = {
             res.json(error)
         } 
     },
+
+    find_general : async(req, res) => {
+        const user = await User.findById(req.user._id);
+        const {wage, age} = req.body
+        const {follow} = req?.body ? req.body : "false"
+        try {
+            if(follow == "true"){
+                let aaa=[];
+                const currentUser = await User.findById(req.user._id);            
+                await Promise.all(
+                currentUser.followins.map(async(friendId) => {
+                    await Post.find({
+                        $and:[
+                            {"user":friendId},
+                            {
+                                $or: [
+                                    { nganhnghe: { $regex: req.query.search, $options: "i" } },
+                                    { nhatuyendung: { $regex: req.query.search, $options: "i" } },
+                                    { khuvuc: { $regex: req.query.search, $options: "i" } },
+                                    { diachilamviec: { $regex: req.query.search, $options: "i" } },
+                                  ],
+                            },
+                            { luongcoban : {$gte: Number(wage ? wage : 0)}},     
+                            { dotuoi : {$lte: Number(age ? age : 10000000000000000 )} },
+                            { dotuoi : {$gte: Number(age ? age : 0)} }
+                        ]}).populate('user').then((data)=>{
+                        aaa = aaa.concat(data)
+                    }); 
+                }
+                ))
+                xemdaluuchua(aaa, user, res);
+            }else{
+            const exp = await Post.find(
+                {
+                    $and:[
+                        
+                        {
+                            $or: [
+                                { nganhnghe: { $regex: req.query.search, $options: "i" } },
+                                { nhatuyendung: { $regex: req.query.search, $options: "i" } },
+                                { khuvuc: { $regex: req.query.search, $options: "i" } },
+                                { diachilamviec: { $regex: req.query.search, $options: "i" } },
+                              ],
+                        },
+                        { luongcoban : {$gte: Number(wage ? wage : 0)}},     
+                        { dotuoi : {$lte: Number(age ? age : 10000000000000000 )} },
+                        { dotuoi : {$gte: Number(age ? age : 0)} }
+                    ]
+                })
+            xemdaluuchua(exp, user, res);
+            }
+        } catch (error) {
+            res.json(error) 
+        }
+    },
     //save recruit (post) => luu id cua bai post vao save cua user (mo model user)
     save_post: async(req,res) => {
         const {id} = req?.params;
