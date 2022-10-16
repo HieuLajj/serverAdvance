@@ -204,6 +204,70 @@ const postController = {
             res.json(error)
         } 
     },
+
+    find_general : async(req, res) => {
+        const user = await User.findById(req.user._id);
+        const {wage, age, sapxeptheoluong} = req.body
+        const {follow} = req?.body ? req.body : "false"
+        let m = sapxeptheoluong ? {luongcoban: sapxeptheoluong} : 0;
+        let g = sapxeptheoluong ? sapxeptheoluong : 0;
+        
+        try {
+            if(follow == "true"){
+                let aaa=[];
+                const currentUser = await User.findById(req.user._id);            
+                await Promise.all(
+                currentUser.followins.map(async(friendId) => {
+                    await Post.find({
+                        $and:[
+                            {"user":friendId},
+                            {
+                                $or: [
+                                    { nganhnghe: { $regex: req.query.search, $options: "i" } },
+                                    { nhatuyendung: { $regex: req.query.search, $options: "i" } },
+                                    { khuvuc: { $regex: req.query.search, $options: "i" } },
+                                    { diachilamviec: { $regex: req.query.search, $options: "i" } },
+                                  ],
+                            },
+                            { luongcoban : {$gte: Number(wage ? wage : 0)}},     
+                            { dotuoi : {$lte: Number(age ? age : 10000000000000000 )} },
+                            { dotuoi : {$gte: Number(age ? age : 0)} }
+                        ]}).populate('user').then((data)=>{
+                        aaa = aaa.concat(data)
+                    }); 
+                }))
+                if(g==1){
+                    aaa.sort((a, b) => (a.luongcoban > b.luongcoban) ? 1 : -1 )
+                }
+                else if(g==-1){
+                    aaa.sort((a, b) => (a.luongcoban < b.luongcoban) ? 1 : -1 )
+                }
+                xemdaluuchua(aaa, user, res);
+            }else{
+            const exp = await Post.find(
+                {
+                    $and:[
+                        
+                        {
+                            $or: [
+                                { nganhnghe: { $regex: req.query.search, $options: "i" } },
+                                { nhatuyendung: { $regex: req.query.search, $options: "i" } },
+                                { khuvuc: { $regex: req.query.search, $options: "i" } },
+                                { diachilamviec: { $regex: req.query.search, $options: "i" } },
+                              ],
+                        },
+                        { luongcoban : {$gte: Number(wage ? wage : 0)}},     
+                        { dotuoi : {$lte: Number(age ? age : 10000000000000000 )} },
+                        { dotuoi : {$gte: Number(age ? age : 0)} }
+                    ]
+                })
+                .sort(m)
+                xemdaluuchua(exp, user, res);
+            }
+        } catch (error) {
+            res.json(error) 
+        }
+    },
     //save recruit (post) => luu id cua bai post vao save cua user (mo model user)
     save_post: async(req,res) => {
         const {id} = req?.params;
@@ -387,4 +451,5 @@ async function locid (postId, resumeId, res, user){
             res.json({ success: false, message: "ban chua gui ho so nay"});
         }
 }
+
 module.exports = postController;
