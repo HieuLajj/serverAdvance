@@ -1,5 +1,4 @@
 const jwt =  require('jsonwebtoken');
-var reload = require('reload')
 const pdf = require('html-pdf');
 const User = require("../models/user");
 const Resume = require("../models/resume");
@@ -7,9 +6,7 @@ const sharp = require('sharp');
 const bcrypt = require('bcrypt');
 const cloudinary = require('../utils/cloudinary');
 const fs = require('fs');
-//const cloudinary = require('../helper/imageUpload')
-//const blueResume = require("./docs/blue-resume");
-const blueResume = require("../docs/blue-resume");
+const puppeteer  = require('puppeteer');
 const resume1_en = require("../docs/resume1_en");
 const resume1_vn = require("../docs/resume1_vn");
 const resume2_en = require("../docs/resume2_en");
@@ -65,7 +62,8 @@ const resumeController = {
         if(anh.anhbieumau!=null){
             fs.unlink(`.${anh.anhbieumau.slice(20)}`, (err) => {
                 if (err) {
-                console.error(err)
+                    console.log("akakaka")
+                    console.error(err)
                 return
             }else{
             }
@@ -114,7 +112,7 @@ const resumeController = {
                     linhvucchuyenmon,
                     chungchi,
                     ngonngucuamau,
-                    anhbieumau: Xulyanhresume(anh, userInfo = req.body, userImage=anh.anhdaidien),
+                    anhbieumau: await Xulyanhresume(anh, userInfo = req.body, userImage=anh.anhdaidien),
                     phanloaibieumau
                 },
                 { new: true, runValidators: true }
@@ -161,7 +159,7 @@ const resumeController = {
                    anhbieumau: Xulyanhresume(anh, userInfo ,userImage = abc),      
                 },
                 { new: true, runValidators: true })
-              res.status(201).json({
+            res.status(201).json({
                 success: true,
                 result2,
                 message: 'Your Profile has updated'
@@ -357,7 +355,7 @@ async function CreatePDF (id, mya){
         res.json(error);      
     }
 }
-function Xulyanhresume(anh,userInfo,userImage){ 
+async function Xulyanhresume(anh,userInfo,userImage){ 
     let resumeT;
     let mau = (userInfo?.mau) ? userInfo?.mau : anh.mau
     let ngonngucuamau = (userInfo?.ngonngucuamau) ? userInfo?.ngonngucuamau : anh.ngonngucuamau
@@ -395,46 +393,44 @@ function Xulyanhresume(anh,userInfo,userImage){
             resumeT = resume1_en;
             break;
     }
-    // let bangmau =[]; 
-    // let trunggian = (userInfo?.mau)?userInfo?.mau:anh.mau
-    // switch(trunggian){
-    //     case "1_red":
-    //         bangmau = ["rgb(252, 76, 0)","rgb(255, 196, 0)","rgb(119, 26, 0)","rgb(119, 26, 0)"]
-    //         break
-    //     case "1_blue":
-    //         bangmau = ["rgb(183, 182, 255)","rgb(91, 88, 255)","rgb(12, 36, 58)","rgb(1, 0, 66)"]
-    //         break
-    //     case "1_green":
-    //         bangmau = ["rgb(139, 247, 205)","rgb(183, 217, 255)","rgb(0, 119, 89)","rgb(0, 119, 89)"]
-    //         break
-    //     case "1_yellow":
-    //         bangmau = ["rgb(200, 255, 2)","rgb(247, 251, 5)","rgb(255, 162, 2)","rgb(255, 162, 2)"]
-    //         break  
-    //     default:
-    //         bangmau = ["rgb(252, 76, 0)","rgb(255, 196, 0)","rgb(119, 26, 0)","rgb(119, 26, 0)"]
-    //         break 
-    // }
-    let pathImage = `./images/image${Date.now()}toHieulajj.png`;
+    let htmlhieu = resumeT(anh, userInfo, userImage);
+    fs.writeFile('./docs/hieulajj.html', htmlhieu, function (err) {
+        if (err) throw err;
+        //console.log('File is created successfully.');
+    });
+    //let pathImage = `./images/image${Date.now()}toHieulajj.png`;
     let pathImageChange = `./images/image${Date.now()}toHieulajj1.png`
-    nodeHtmlToImage({
-        output: pathImage,
-        html: resumeT(anh, userInfo, userImage),
-        content: { name: 'you' }
-    }).then(() => 
-        {
-            sharp(pathImage).extract({ width: 586, height: 755, left:0,top:0,right:169 }).toFile(pathImageChange).then(
-               ()=>{
-                fs.unlink(pathImage, (err) => {
-                    if (err) {
-                    console.error(err)
-                    return
-                }else{
-                }
-                }) 
-               } 
-            );                   
+    const browser = await puppeteer.launch()
+    const page = await browser.newPage()
+    await page.goto('http:/localhost:8000/docs/hieulajj.html')
+    await page.screenshot({
+        path: pathImageChange,
+        type: 'png',
+        clip: {
+            x: 0, y: 0,
+            width: 586, height: 755
         }
-    ); 
-    return`http:/localhost:8000${pathImageChange.slice(-(pathImageChange.length-1))}`        
+    })
+    await browser.close()
+    // nodeHtmlToImage({
+    //     output: pathImage,
+    //     html: resumeT(anh, userInfo, userImage),
+    //     content: { name: 'you' }
+    // }).then(() => 
+    //     {
+    //         sharp(pathImage).extract({ width: 586, height: 755, left:0,top:0,right:169 }).toFile(pathImageChange).then(
+    //            ()=>{
+    //             fs.unlink(pathImage, (err) => {
+    //                 if (err) {
+    //                 console.error(err)
+    //                 return
+    //             }else{
+    //             }
+    //             }) 
+    //            } 
+    //         );                   
+    //     }
+    // ); 
+    return `http:/localhost:8000${pathImageChange.slice(-(pathImageChange.length-1))}`        
 }
 module.exports = resumeController;
