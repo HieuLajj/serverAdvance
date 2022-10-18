@@ -118,7 +118,8 @@ const userController = {
             await User.findByIdAndUpdate(user._id,{avatar: result.url})
             res.status(201).json({
                 success: true,
-                message: 'Your Profile has updateed'
+                message: 'Your Profile has updateed',
+                data: result.url
             })
         } catch (error) {
         res.status(500).json({
@@ -146,7 +147,8 @@ const userController = {
             await User.findByIdAndUpdate(user._id,{anhbangcap: result.url})
             res.status(201).json({
                 success: true,
-                message: 'Your Profile has updateed'
+                message: 'Your Profile has updateed',
+                data: result.url
             })
         } catch (error) {
         res.status(500).json({
