@@ -216,8 +216,7 @@ const postController = {
             if(follow == "true"){
                 let aaa=[];
                 const currentUser = await User.findById(req.user._id);            
-                await Promise.all(
-                currentUser.followins.map(async(friendId) => {
+                const promises = currentUser.followins.map(async (friendId) => {
                     await Post.find({
                         $and:[
                             {"user":friendId},
@@ -235,7 +234,8 @@ const postController = {
                         ]}).populate('user').then((data)=>{
                         aaa = aaa.concat(data)
                     }); 
-                }))
+                })
+                await Promise.all(promises);
                 if(g==1){
                     aaa.sort((a, b) => (a.luongcoban > b.luongcoban) ? 1 : -1 )
                 }
