@@ -145,7 +145,7 @@ const resumeController = {
             .json({success:false, message: 'unauthorized acesss'
             })
         try {
-            console.log("dangchay")
+            //console.log("dangchay")
             const result = await cloudinary.uploader.upload(req.file.path,{
                 public_id: `${user._id}_profile`,
                 width: 500,
@@ -156,7 +156,8 @@ const resumeController = {
             const result2 = await Resume.findByIdAndUpdate(
                 id,
                 {  anhdaidien: result.url,
-                   anhbieumau: Xulyanhresume(anh, userInfo ,userImage = abc),      
+                   anhbieumau: await Xulyanhresume(anh, userInfo = null ,userImage = abc),   
+                   //await Xulyanhresume(anh, userInfo = req.body, userImage=anh.anhdaidien),   
                 },
                 { new: true, runValidators: true })
             res.status(201).json({

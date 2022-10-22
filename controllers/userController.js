@@ -3,6 +3,7 @@ const User = require("../models/user");
 const sharp = require('sharp');
 const bcrypt = require('bcrypt');
 const cloudinary = require('../utils/cloudinary');
+const Post = require("../models/post")
 //const cloudinary = require('../helper/imageUpload')
 const userController = {
     //ADD USER
@@ -288,9 +289,11 @@ const userController = {
 
     // truy van nhung ban gui ho so truoc do
     fetch_recruitments: async(req,res) => {
+        const user = await User.findById(req.user._id);
         try{
             const exp = await User.findById(req.user._id).populate('recruitments');
-            res.json({success: true, data: exp.recruitments});
+            //res.json({success: true, data: exp.recruitments});
+            xemdaluuchua(exp.recruitments, user, res);
         }catch(error){
             res.json(error);
         }
@@ -337,7 +340,43 @@ const userController = {
         } catch (error) {
             
         }
+    },
+
+    //xem cac ho so da gui cua 1 nha tuyen dung
+     // tim tat ca cac bai post cua 1 user (cua nha tuyen dung dang len)
+    fetchAllPostUser : async (req,res)=>{
+        const {id} = req?.params;
+        const user = await User.findById(req.user._id);
+        try {
+            const exp = await Post.find({"user" : id});
+            //.populate('user');
+            //res.json({success: true, data: exp});
+            xemdaluuchua(exp, user, res);
+        } catch (error){
+            res.json(error);
+        }
+    },
+
+    // tim kiem ten theo nha tuyen dung
+    findUser : async (req,res)=>{
+        const keyword = req.query.search
+                    ? {
+                        $and:[
+                            {name: { $regex: req.query.search, $options: "i" },},
+                            {"typer":"tuyendung"},
+                        ]
+                      }
+                    : {};
+        try {
+            const exp = await User.find(keyword)
+            //.populate('user');
+            res.json({success: true,data: exp})
+            //res.json(exp);
+        } catch (error){
+            res.json(error);
+        }
     }
+
 }
 async function xemdaluuchua (exp, user, res){
     let bbb = []
@@ -345,7 +384,8 @@ async function xemdaluuchua (exp, user, res){
             exp.map(async(element)=>{
                 let b = {
                     _id : element._id,
-                    user : element.user,
+                    //user : element.user,
+                    user: await User.findById(element.user),
                     luongcoban : element.luoncoban,
                     soluongtuyen: element.soluongtuyen,
                     gioitinh: element.gioitinh,
