@@ -42,5 +42,9 @@ router.get('/fetch_recruitments', isAuth, userController.fetch_recruitments);
 //follow
 router.put('/follow/:id',isAuth,userController.follow);
 //unfollow
-router.put('/unfollow/:id',isAuth,userController.unfollow);
+router.put('/unfollow/:id', isAuth, userController.unfollow);
+
+router.get('/fetchAllPostUser/:id', isAuth, userController.fetchAllPostUser);
+
+router.get('/findUser',isAuth, userController.findUser);
 module.exports = router;
